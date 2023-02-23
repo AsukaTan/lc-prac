@@ -1,0 +1,1479 @@
+/**
+this file was deisgned for 
+work flow:
+
+learn and organize the template ---> do the problem --> 
+
+day tesk: 1. Do and figure out at least three problems: 1 easy and 2 hard from LeetCode Weekly contest
+		  2. Learn and copy the template from specific topics
+		  3. Do at least five questions we had done and 2 question we not done
+*/
+			
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Time Complexities: O(logN)
+Space Complexities: O(1)	
+题目:
+Question_Num	Difficulty		Reminders
+704				Easy 			Handle both three ways
+287				Medium			用binarysearch先取得mid 然后查看整个数组里比mid小或者相等的个数 如果多余他本身的话说明里面有重复
+875				Medium			取得数组最大值 然后使用BinarySearch一个一个试
+852				Medium 			画图然后讨论情况即可
+
+162
+33
+*/
+class BinarySearch{
+	/**
+	典型binary search
+	end = mid - 1: start and end may be out of range, and start stops at the position just after end.
+	Base Model 1
+	search		start		end / index
+	0			0			-1
+	2			1			0
+	3			1			1
+	10			5			4
+	*/
+	public int binarySearch(int[] nums, int target) {
+		int start = 0, end = nums.length - 1;
+			while (start <= end) {
+				int mid = start + (end - start) / 2;
+				if (nums[mid] == target)
+					return start, end;
+				else if (nums[mid] < target)
+					start = mid + 1;
+				else if (nums[mid] > target)
+					end = mid - 1;
+			}
+		return start, end;
+	}
+	
+	//recursive for Base Model 1
+	public int search(int[] nums, int target) {
+			return recursive_binary_search(nums, 0, nums.length - 1, target);
+		}
+	
+	int recursive_binary_search(int[] nums, int left, int right, int target){
+		//base case
+		if(left > right) return -1;
+		
+		int mid = (right - left) / 2 + left;
+		if(nums[mid] == target) return mid;
+		else if(nums[mid] > target){
+			//go left
+			return recursive_binary_search(nums, left, mid - 1, target);
+		}else{
+			//go right
+			return recursive_binary_search(nums, mid + 1, right, target);
+		}
+	}
+	
+	/**
+	Base Model 2
+	end = mid: start and end would always be in range
+	search		start		end / index
+	0			0			0
+	2			1			1
+	3			1			1
+	10			4			4
+	更改target为nums[right]就可以去寻找rotated array里面的最小值
+	*/
+	public int search(int[] nums, int target) {
+		int start = 0, end = nums.length - 1;
+		while (start <= end) {
+				int mid = start + (end - start) / 2;
+				if (nums[mid] == target)
+					return mid;
+				if (mid == end) //表示该left和right已经重合了
+					return -1;
+				else if (nums[mid] < target)
+					start = mid + 1;
+				else if (nums[mid] > target)
+					end = mid;
+				}
+		return -1;
+	}
+}
+
+/**
+---------------------------------------------------------------------------------------------------------------------------
+preorder / inorder / postorder
+a) non-recursion
+b) recursive approach: 1. Traversal 2. Divide and Conquer
+题目:
+Question_Num	Difficulty		Reminders
+98				Medium			给node带入范围 一开始的root的范围为Long.MIN_VALUE -- MAX_VALUE 然后进入左右
+114
+257
+*/
+class BinaryTreeTraversals{
+	
+	
+	/**						1
+	preorder					2
+							3
+	preorder: 1 2 3
+	1. Starting from the root, traverse each node
+	2. Put nodes’ right and left children into Stack.
+	3. When nodes are polled, add them to the answer ArrayList.
+	*/
+	//Recursive Preorder Traversal
+	public List<Integer> preorderTraversal(TreeNode root) {
+			List<Integer> list = new ArrayList();
+			preorder(root, list);
+			return list;
+		}
+	
+		void preorder(TreeNode root, List<Integer> list){
+			if(root == null) return;
+			
+			list.add(root.val);
+			preorder(root.left, list);
+			preorder(root.right, list);
+		}
+	//Iterative Preorder Traversal
+	public List<Integer> preorderTraversal(TreeNode root) {
+			List<Integer> list = new ArrayList();
+			Stack<TreeNode> stack = new Stack();
+		
+			if(root == null) return list;
+		
+			stack.push(root);
+		
+			while(!stack.isEmpty()){
+				TreeNode node = stack.pop();
+				list.add(node.val);
+				if(node.right != null) stack.push(node.right);
+				if(node.left != null) stack.push(node.left);}
+		//先push右边在push左边 因为左边得先出去
+		
+			return list;
+		}
+		
+		
+	/**						1
+	Inorder						2
+							3
+	Inorder: 1 3 2
+	1. for each root, keep pushing it’s left children into the stack until nulls are hit
+	2. then pop from stack and add to list, and repeat the above process for its right children
+	*/
+	//Iterative Inorder Traversal
+	public List<Integer> inorderTraversal(TreeNode root) {
+			List<Integer> list = new ArrayList();
+			if(root == null) return list;
+		
+			Stack<TreeNode> stack = new Stack();
+			while(root != null || !stack.isEmpty()){
+				while(root != null){
+					stack.push(root);
+					root = root.left;
+				}
+				root = stack.pop();
+				list.add(root.val);
+				root = root.right;
+			}
+		
+			return list;
+	}
+	
+	
+	/**						1
+	Postorder					2
+							3
+	Inorder: 3 2 1
+
+	1. Starting from the root, traverse each node
+	2. Put nodes’ left and right children into Stack.
+	3. When nodes are polled, add them to the front of the answer ArrayList.
+	*/
+	//Iterative Postorder Traversal
+	public List<Integer> postorderTraversal(TreeNode root) {
+			if(root == null) return new ArrayList();
+		
+			List<Integer> list = new ArrayList();
+			Stack<TreeNode> stack = new Stack();
+		
+			stack.push(root);
+			while(!stack.isEmpty()){
+				TreeNode node = stack.pop();
+				list.add(0, node.val);
+				if(node.left != null) stack.push(node.left);
+				if(node.right != null) stack.push(node.right);
+			}
+		
+			return list;
+		}
+	
+}
+/**
+BFS mainly uses Queue
+1. BFS can be applied to three main categories: Tree, Graph, and Matrix.
+2. In general, BFS can apply to graph traversal problems that are related to finding thelevel order traversal, connected components, and topological sorting.
+3. In addition, BFS also works for finding the shortest path in a simple graph. (not know)
+Question_Num	Difficulty		Reminders
+17				Medium			要清楚自己每个循环里在干啥
+210
+339				Medium			需要额外注意对于method的使用 因为他是arraylist嵌套 所以要使用addAll()方法
+994				Medium			最后需要剪掉1
+253
+373
+215
+
+*/
+class Breadth First Search{
+	/**
+	--------------------------------------------------------------------
+	1. level order: traverse the graph node by one level in one iteration,and use size to
+	define the number of items in current level.
+	*/
+	Queue<TreeNode> queue = new LinkedList<TreeNode>();
+	queue.offer(root);
+	while (!queue.isEmpty()) {
+		ArrayList<Integer> level = new ArrayList<Integer>();
+		int size = queue.size();
+		for (int i = 0; i < size; i++) {
+			TreeNode cur = queue.poll();
+			level.add(cur.val);
+			if (cur.left != null)
+				queue.offer(cur.left);
+			if (cur.right != null)
+				queue.offer(cur.right);
+		}
+		results.add(level);
+	}
+	return results;
+	
+	/**
+	--------------------------------------------------------------------
+	2. Pre-build hashmap.
+	a. Transform an array of array into Adjacency List for BFS traversal
+	*/
+	List<Integer>[] graph = new List[n];
+	for (int i = 0; i < graph.length; i++)
+		graph[i] = new ArrayList<>();
+	for (int[] edge : edges) {
+		graph[edge[0]].add(edge[1]);
+		graph[edge[1]].add(edge[0]);
+	}
+	
+	/**
+	b. Transform an array of array into Incoming Edges Count for each node for
+	BFS traversal
+	*/
+	for (Node node : graph) {
+		for (Node neighbor : node.neighbors) {
+			if (inDegrees.containsKey(neighbor))
+				inDegrees.put(neighbor, inDegrees.get(neighbor) + 1);
+			else
+				inDegrees.put(neighbor, 1);
+		}
+	}
+	
+	/**
+	--------------------------------------------------------------------
+	3. Visited check
+	a. Graph use a set to detect visited node
+	*/
+	Set<Node> visited = new HashSet<>();
+	while (!queue.isEmpty()) {
+		Node cur = queue.poll();
+		for (Node neighbor : cur.neighbors) {
+			if (!visited.contains(neighbor)) {
+				queue.offer(neighbor);
+				visited.add(neighbor);
+			}
+		}
+	}
+}
+
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Depth First Search
+DFS is used to list all the possible results. However, for finding the best solution in a graph or matrix, such as the shortest path, we normally use BFS or dynamic programming. 
+Question_Num	Difficulty		Reminders
+733				easy
+1367			Medium			两个dfs的嵌套 第一个dfs检查root符不符合 如果不符合则走左右 记住第一个到basecase为如果head到头了则是path 如果root到头则是false
+1376			Medium			DFS 加 graph的结合 蛮难的 记住先做出graph 然后根据每个index的employee来求
+*/
+class Depth First Search{
+	//1. startIndex + 1
+	private void helper(int[] nums, int startIndex, List<Integer> subset, List<List<Integer>> results) {
+		....
+		for(int i = startIndex; i < nums.length; i++){
+			helper(nums, startIndex + 1, subset, results);
+		}
+	}
+	
+	//2. Skip the duplication
+	// assuming the array has be sorted
+	for(int i = offset; i < nums.length; i++){
+		if(i != offset && nums[i] == nums[i - 1]) continue;
+		....
+	}
+	
+	//3. Check the visited item
+	for (int i = 0; i < nums.length; i++) {
+		if (visited[i]) {
+			continue;
+		}
+		visited[i] = true;
+		dfs(nums, visited, permutation, results);
+		visited[i] = false;
+	}
+	
+}
+
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Trie has a tree structure that stores a dynamic data, which the keys are usually strings.
+Inserting keys into trie and search for keys takes O(m) time, where m is the length of the key.
+Tire is usually used for prefix string and DFS related questions
+Question_Num	Difficulty		Reminders
+211				Medium 			注意dfs里面的循环
+212
+*/
+class Trie{
+	class TrieNode {
+		boolean isWord = false;
+		Map<Character, TrieNode> children = new HashMap<>();
+	}
+	class Trie {
+		private TrieNode root = new TrieNode();
+		public void insert(String word) {
+			TrieNode cur = root;
+			// Insert all characters into trie
+			for (int i = 0; i < word.length(); i++) {
+				char c = word.charAt(i);
+				if (!cur.children.containsKey(c)) {
+					cur.children.put(c, new TrieNode());
+				}
+				cur = cur.children.get(c);
+			}
+			// After insertion, set the end node to true
+			cur.isWord = true;
+		}
+		public boolean search(String word) {
+			TrieNode result = searchPrefix(word);
+			return (result != null) && (result.isWord);
+		}
+		public boolean startsWith(String prefix) {
+			TrieNode result = searchPrefix(prefix);
+			return result != null;
+		}
+	// If there exists a word, return the end node; otherwise null
+		private TrieNode searchPrefix(String word) {
+			TrieNode cur = root;
+			for (int i = 0; i < word.length(); i++) {
+				char c = word.charAt(i);
+				if (cur.children.containsKey(c))
+					cur = cur.children.get(c);
+				else
+					return null;
+			}
+			return cur;
+		}
+	}
+}
+
+class HashMap{
+/**
+---------------------------------------------------------------------------------------------------------------------------
+见hashmap_api的方法
+Question_Num	Difficulty		Reminders
+*/
+}
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Linked Lists questions use five essential operations to modify the structure of the list:
+Deletion, Insertion, Merging. Reversing, and Flipping.
+All of the operations include three essential steps:
+1. set up pointers. 
+2. restructure the list.
+3. update pre and cur.
+Note: Use “Dummy Node” when we are asked to modify the structure of the LinkedList
+Question_Num	Difficulty		Reminders
+1474			Easy
+*/
+class LinkedList{
+	/**
+	1. Deletion: Iterate to after the condition point and link prev and cur, so that nodes in
+	between are deleted
+	*/
+	... 
+	while (cur != null and condition)
+		cur = cur.next;
+		pre.next = cur;
+		
+	/**
+	Insertion: insertion a node between pre and pre.next
+	a. Scenario 1: Define nextNode as cur, then link it between pre and pre.next
+	*/
+	ListNode nextNode = cur;
+	nextNode.next = pre.next;
+	pre.next = nextNode;
+	
+	/**
+	b. Scenario 2: Link cur and pre.next, then link pre and cur
+	*/
+	cur.next = preNode.next;
+	preNode.next.prev = cur;
+	preNode.next = cur;
+	cur.prev = preNode;
+	
+	/**
+	3. Merge: Use dummy head to merge list n1 and n2, then return the dummy.next
+	*/
+	ListNode dummy = new ListNode(-1);
+	ListNode pre = dummy;
+	while (n1 != null && n2 != null) {
+		if (n1.val < n2.val) {
+			pre.next = n1;
+			n1 = n1.next;
+		}
+		else {
+			pre.next = n2;
+			n2 = n2.next;
+		}
+		pre = pre.next;
+	}
+	pre.next = (n1 != null) ? n1 : n2;
+	return dummy.next;
+	
+	/**
+	4. Reverse: Point backward and update the pointer
+	*/
+	ListNode next_next = cur.next;
+	cur.next = pre;
+	pre = cur;
+	cur = next_next;
+	
+	/**
+	5. Flip: Flip node cur and nextNode, which involves four nodes
+	*/
+	ListNode nextNode = cur.next;
+	ListNode next_next = nextNode.next;
+	nextNode.next = cur;
+	cur.next = next_next;
+	pre.next = nextNode;
+	pre = cur;
+	cur = cur.next;
+}
+
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Pointer iteration usually requires one or more iterators and trackers to traverse from the
+same or opposite direction in the array.
+Definitions: 
+Iterators: the pointers that traverse the whole array;
+Trackers: the pointers that only change positions under some conditions.
+*/
+class PointerIteration{
+	/**
+	1. In-place two pointers swap (one iterator + one tracker)
+	
+	Swap causes the instability, so the entire list after swapping will not be in relative
+	order. Only numbers satisfying numbers < k will maintain the relative order after the
+	partition.
+	
+	In the following example, [-2, 1, 0] retains the relative order and [3, 4, 5] does not.
+	Input: nums = [3, 4, -2, 5, 1, 0], k = 2
+	Output: [-2, 1, 0, 5, 4, 3]
+	*/
+	int tracker = 0;
+	for (int i = 0; i < nums.length; i++) {
+		if (nums[i] < k) {
+			// Swap
+			int temp = nums[i];
+			nums[i] = nums[tracker];
+			nums[tracker] = temp;
+			tracker++;
+		}
+	}
+	
+	/**
+	In-place two pointers swap (two iterators)
+	*/
+	public class Solution {
+		public int partitionArray(int[] nums, int pivot) {
+			if (nums == null || nums.length == 0)
+				return 0;
+			int start = 0, end = nums.length - 1;
+			while (start <= end) {
+				while (start <= end && nums[start] < pivot)
+					start++;
+				while (start <= end && nums[end] >= pivot)
+					end--;
+				if (start <= end) {
+					int temp = nums[start];
+					nums[start] = nums[end];
+					nums[end] = temp;
+					start++;
+					end--;
+				}
+			}
+			return start;
+		}
+	}
+	
+	/**
+	3. Quick select (k largest number)
+	The code was written down in PYTHON
+	*/
+	class Solution:
+	def findKthLargest(self, nums, k):
+	/**
+	:type nums: List[int]
+	:type k: int
+	:rtype: int
+	*/
+		def partition(left, right, pivot_index):
+			pivot = nums[pivot_index]
+			
+			//1. move pivot to end
+			nums[pivot_index], nums[right] = nums[right], nums[pivot_index]
+			
+			//2. move all smaller elements to the left
+			store_index = left
+			for i in range(left, right):
+				if nums[i] < pivot:
+					nums[store_index], nums[i] = nums[i], nums[store_index]
+					store_index += 1
+		
+			//3. move pivot to its final place
+			nums[right], nums[store_index] = nums[store_index], nums[right]
+			return store_index
+			
+		def select(left, right, k_smallest):
+			/**
+			Returns the k-th smallest element of list within left..right
+			*/
+			if left == right: // If the list contains only one element,
+				return nums[left] // return that element
+				
+			// select a random pivot_index between
+			pivot_index = random.randint(left, right)
+			// find the pivot position in a sorted list
+			pivot_index = partition(left, right, pivot_index)
+			// the pivot is in its final sorted position
+			if k_smallest == pivot_index:
+				return nums[k_smallest]
+			// go left
+			elif k_smallest < pivot_index:
+				return select(left, pivot_index - 1, k_smallest)
+			// go right
+			else:
+				return select(pivot_index + 1, right, k_smallest)
+		// kth largest is (n - k)th smallest
+		return select(0, len(nums) - 1, len(nums) - k)
+		
+	/**
+	4. three pointers operation
+	*/
+	for (int i = 0; i < nums.length; i++) {
+		// Check duplicates
+		if (i != 0 && nums[i] == nums[i - 1])
+			continue;
+		int start = i + 1, end = nums.length - 1;
+		while (start < end) {
+			if (some condition)
+				end--;
+			else if (some condition)
+				start++;
+			else {
+				...
+				start++;
+				end--;
+				while (start < end && nums[start] == nums[start - 1])
+					start++;
+				while (start < end && nums[end] == nums[end + 1])
+					end--;
+			}
+		}
+	}
+}
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Use two iterators pointing to the right and left sides of the window. Right pointer iterates first
+and stops when the left pointer meets certain conditions. Then the left pointer iterates
+*/
+class SlidingWindow{
+	/**
+	1. Sliding Window Model
+	○ Case 1: 
+	The ans can be calculated (satisfying the condition) by just shifting
+	the right pointer initially. In the example, the first iteration of the right pointer
+	can satisfy the condition. (meet condition -> not meet)
+	i. Ex: Longest Substring Without Repeating Characters
+	Input: s = “abcabcbb”, Output: 3, where “abc” is the longest substring
+	○ Case 2: 
+	The ans can be calculated (satisfying the condition) by shifting both
+	left and right pointers. (not meet condition -> meet)
+	*/
+	public int minSubArrayLen(int s, int[] nums) {
+		int sum = 0;
+		int left = 0, right = 0;
+		// right pointer traverse the whole array
+		for (right = 0; right < n; right++) {
+			// right expands the window by adding more elements
+			sum += nums[right];
+			while (condition) {
+				Case2: update ans = right - left + 1
+				// start shrinks the window by popping off elements
+				sum -= nums[left];
+				// left iteratees
+				left++;
+			}
+			Case1: update ans = right - left + 1
+		}
+		return ans;
+	}
+	
+	/**
+	2. Sliding Window HashMap Model
+	*/
+	public int lengthOfLongestSubstring(String s) {
+		int n = s.length(), ans = 0;
+		Map<Character, Integer> hash = new HashMap<>();
+		// try to extend the range [left, right]
+		int left = 0, right = 0;
+		for (right = 0; right < n; right++) {
+			//iterate right pointer and update the hash value
+			hash.put(s.charAt(right), right);
+			if (condition) {
+				//update left pointer based on the hash value
+				left = Math.max(hash.get(s.charAt(right)) + 1, left);
+			}
+			ans = Math.max(ans, right - left + 1);
+		}
+		return ans;
+	}
+	/**
+	3. While and If:
+		● It depends on how many iterations that left pointer needs to unblock the right pointer.
+			If: For one iteration to find the correct next position for the left pointer
+			such as the hashmap sliding window model
+			While: multiple iterations, such as the sliding window model.
+	*/
+	
+	/**
+	//没有看懂
+	4. When to use hashmap:
+		● This approach cannot be applied to questions that use a variable to represent
+		the whole array.
+			E.g. the sum in Minimum Size Subarray Sum:
+			nums = [22, -2, 10, 0], s = 30 -> length of 3 with sum = 30
+			- Cannot skip element while also decrementing the corresponding value
+			from sum.
+		● Target array must contain the unique character.
+			E.g. the indexes in Longest Substring with At Most K Distinct
+			Characters
+			s = [a, a, b], t = [a, a, b] -> [a, b]
+			- As the HashMap only stores the latest position of characters that
+			meets the condition, the first “a” in s would be ignored and result in an
+			incorrect answer.
+	*/
+}
+/**
+---------------------------------------------------------------------------------------------------------------------------
+PrefixSum
+Define a prefix sum array and find the sums between j and i to satisfy certain conditions.
+This approach can be combined with other approaches or data structures, i.e. HashMap,
+Binary Search or Sliding Window in order to achieve some functionalities...x
+*/
+class PrefixSum{
+	/**
+	Description:
+		Given an integer array, find a subarray where the sum of numbers is zero. Return the index
+		of the first number and the index of the last number.
+		Example 1:
+			Input: [-3, 1, 2, -3, 4]
+			Output: [0, 2] or [1, 3]
+	*/
+	
+	/**
+	Idea (Prefix Sum: Single Iterator):
+		Define prefixSum with a 0 placeholder, so that the array’s starting position would be
+		included, and use the map to store the prefix sum and the corresponding index. If a certain
+		prefix sum has been encountered twice, meaning that all the elements in between have a
+		total sum of zero (i.e. the green interval or the red interval).
+		Time Complexity: O(N) 
+		Space Complexity: O(N)
+	*/
+	class Solution {
+		public static List<Integer> subarraySum(int[] nums) {
+			List<Integer> ans = new ArrayList<Integer>();
+			if (nums == null || nums.length == 0)
+				return ans;
+			//map stores entry (prefix sum, index)
+			Map<Integer, Integer> map = new HashMap<>();
+			// If the subarray starting starts from index 0, need to have this to solve the corner case
+			int[] prefixSum = new int[nums.length+1];
+			prefixSum[0] = 0;
+			for (int i = 1; i <= nums.length; i++)
+				prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
+			for (int i = 0; i < prefixSum.length; i++) {
+				if (map.containsKey(prefixSum[i])) {
+					ans.add(map.get(prefixSum[i]));
+					ans.add(i - 1);
+					break;
+				}
+				map.put(prefixSum[i], i);
+			}
+			return ans;
+		}
+	}
+	/**
+	Description:
+		Given an integer array nums, find the contiguous subarray (containing at least one number)
+		which has the largest sum and return the first and last index of the subarray
+		Example 1:
+			Input: [-3, 1, 3, -3, 4]
+			Output: [1, 4]
+	*/
+	
+	/**
+	Idea:
+		Initialize two pointers start and end to array’s start then traverse the array, along with two
+		variables sum and maxSum to keep track of the current subarray sum and maximum. When
+		meeting a bigger sum, update ans to start and end; if we have a current sum < 0, reset sum
+		to 0 and make start = end + 1, so that we can skip the negative sums.
+		Time Complexity: O(N)
+		Space Complexity: O(1)
+	*/
+	public class Solution {
+		public List<Integer> continuousSubarraySum(int[] nums) {
+			int[] ans = new int[2];
+			int sum = 0, maxSum = Integer.MIN_VALUE;
+			int start = 0, end = 0;
+			for (end = 0; end < nums.length; end++) {
+				sum += nums[end];
+				if (sum > maxSum) {
+					maxSum = sum;
+					ans[0] = start;
+					ans[1] = end;
+				}
+				//如果前面的sum是负数的话代表着如果带着前面不会变为最大 因为无论后面都大 都会缩小后面如果合在一起 
+				//所以我们需要更新start到end后一位 和 sum 从而重新开始
+				if (sum < 0) {
+					// Reset sum;
+					sum = 0;
+					start = end + 1;
+				}
+			}
+			return Arrays.asList(ans[0], ans[1]);
+		}
+	}
+	/**
+	Description：
+		Given an integer matrix, find a submatrix where the sum of numbers is zero. Return the
+		upper left and lower right indices.
+		Example 1:
+			Input:
+			[1, 5, 7]
+			[3, 7, -8]
+			[4, -8, 9]
+			Output:
+			[ [1, 1], [2, 2] ]
+	*/
+	
+	/**
+	Idea
+		Define a 2D prefix sum matrix with m + 1 rows and n + 1 columns, then initialize the first row
+		and first columns to all 0s. Then define startRow and endRow for each pair of rows, and use
+		a HashMap to store the vertical difference and corresponding column indices. If we
+		encounter a vertical difference twice, means that we have found the ans.
+		Time Complexity: O(N^3) 
+		Space Complexity: O(N^2)
+	*/
+	public class Solution {
+		public int[][] submatrixSum(int[][] matrix) {
+			int[][] ans = new int[2][2];
+			if (matrix == null || matrix.length == 0 || matrix[0].length ==0)
+				return ans;
+			// Pre-processing
+			int m = matrix.length, n = matrix[0].length;
+			int prefixSum[][] = new int[m + 1][n + 1];
+			// Initialize the first col to all 0s
+			for (int i = 0; i < m; i++)
+				prefixSum[i][0] = 0;
+			// Initlalize the first row to all 0s
+			for (int j = 1; j < n; j++)
+				prefixSum[0][j] = 0;
+			// Compute prefix prefixSum for upto current index
+			for (int i = 0; i < m; i++)
+				for (int j = 0; j < n; j++)
+					//在一个矩阵中这个位置的值等于左边和上面的值加上自身的值加起来 但是前面已经包含了两个左上的元素值 所以得减去一个
+					prefixSum[i + 1][j + 1] = matrix[i][j] + prefixSum[i + 1][j] + prefixSum[i][j + 1] - prefixSum[i][j];
+			for (int startRow = 0; startRow < m; startRow++) {//1
+				for (int endRow = startRow + 1; endRow <= m; endRow++) {//3
+					// Key: vertical difference -> Value: col index for the difference
+					Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+					// Find the veritical difference for each col
+					for (int col = 0; col <= n; col++) {
+						int verticalDiff = prefixSum[endRow][col] - prefixSum[startRow][col];
+						// Mens that horizontal difference also satisfy
+						if (map.containsKey(verticalDiff)) {
+							ans[0][0] = startRow; ans[0][1] = map.get(verticalDiff);
+							//[0][0] = 1 [0][1] = 1
+							ans[1][0] = endRow - 1; ans[1][1] = col - 1;
+							////[1][0] = 2 [0][1] = 2
+							return ans;
+						}else
+							map.put(verticalDiff, col);
+					}
+				}
+			}
+			return ans;
+		}
+	}
+	
+	/**
+	123页图文解释
+	Prefix Sum + Hashmap (Tracker)
+	560. Subarray Sum Equals K
+	*/
+	class Solution {
+		public int subarraySum(int[] nums, int k) {
+			if (nums == null || nums.length == 0)
+				return 0;
+			int count = 0;
+			Map<Integer, Integer> map = new HashMap<>();
+			int[] prefixSum = new int[nums.length+1];
+			prefixSum[0] = 0;
+			for (int i = 1; i <= nums.length; i++)
+				prefixSum[i] = prefixSum[i - 1] + nums[i-1];
+			// Initialization to include 0
+			for (int i = 0; i < prefixSum.length; i++) {
+				// Check if the difference exists
+				if (map.containsKey(prefixSum[i] - k))
+				// If exists, extend the previous subarrays
+					count += map.get(prefixSum[i] - k);
+				map.put(prefixSum[i], map.getOrDefault(prefixSum[i], 0) + 1);
+			}
+			return count;
+		}
+	}
+	
+	/**
+	125页图文解释
+	Prefix Sum + Binary Search
+	209. Minimum Size Subarray Sum
+	*/
+	
+	/**
+	brute force
+	*/
+	class Solution {
+		public int minSubArrayLen(int target, int[] nums) {
+			int n = nums.length;
+			if (nums == null || n == 0)
+				return 0;
+			int ans = Integer.MAX_VALUE;
+			int[] sums = new int[n];
+			prefixSum[0] = nums[0];
+			for (int i = 1; i < n; i++)
+				prefixSum[i] = prefixSum[i - 1] + nums[i];
+			for (int i = 0; i < n; i++) {
+				for (int j = i; j < n; j++) {
+					int sum = prefixSum[j] - prefixSum[i] + nums[i];
+					if (sum >= target) {
+						ans = Math.min(ans, j - i + 1);
+						break;
+					}
+				}
+			}
+			return ans == Integer.MAX_VALUE ? 0 : ans;
+		}
+	}
+	
+	/**
+	Prefix Sum + Binary Search
+	*/
+	class Solution {
+		public int minSubArrayLen(int target, int[] nums) {
+			int sum = 0, minLen = Integer.MAX_VALUE;
+			int[] prefixSum = new int[nums.length+1];
+			prefixSum[0] = 0;
+			for (int i = 1; i <= nums.length; i++)
+				prefixSum[i] = prefixSum[i - 1] + nums[i-1];
+			for (int start = 0; start < prefixSum.length; start++) {
+				int end = findWindowEnd(start, prefixSum, target);
+				//If end point is -1, means it is already out of bounds
+				// thus cannot continue to shrink the window anymore
+				if (end == -1)
+					break;
+				minLen = Math.min(end - start, minLen);
+			}
+			return minLen == Integer.MAX_VALUE ? 0 : minLen;
+		}
+		
+		private int findWindowEnd(int fixedStart, int[] prefixSum, int target) {
+			int start = fixedStart, end = prefixSum.length - 1;
+			while (start <= end) {
+				int mid = (start + end) / 2;
+				int sum = prefixSum[mid] - prefixSum[fixedStart];
+				if (sum >= target)
+					end = mid - 1;
+				else
+					start = mid + 1;
+			}
+			return start < prefixSum.length ? start : -1;
+		}
+	}
+	
+	/**
+	Prefix Sum + Sliding Window (Iterator & Two Trackers)
+		Current index i is the iterator and left and right pointers are the trackers. Left pointer tracks
+		the window size and moves forward when the current window sum is greater than max
+		subarray sum. Right pointer tracks the incoming value size and moves forward when
+		incoming value is greater than min subarray sum. Ex: if the incoming value is 0, then the
+		right pointer should stop moving forward.
+		Time Complexity: O(N) 
+		Space Complexity: O(N)
+	*/
+	class Solution {
+		public static int subarraySumII(int[] A, int start, int end) {//start = 1, end = 3
+			int ans = 0;
+			if (A == null || A.length == 0)
+				return ans;
+			int[] prefixSum = new int[A.length + 1];
+			prefixSum[0] = 0;
+			for (int i = 1; i <= A.length; i++)
+				prefixSum[i] = prefixSum[i - 1] + A[i - 1];
+			int left = 0, right = 0;
+			for (int i = 0; i < prefixSum.length; i++) {
+				//control the biggest number sum using prefix sum diff
+				while (left < i && prefixSum[i] - prefixSum[left] > end)
+					left++;
+				//control the incoming value is not less the smallest number
+				while (right < i && prefixSum[i] - prefixSum[right] >= start)
+					right++;
+			ans += right - left;
+			}
+			return ans;
+		}
+	}
+	
+	/**
+	128页
+	Prefix + Transferred Sliding Window
+	There are two steps, one iterator defines the boundary values and transfers the value into
+	the sliding window start and end index.
+	● In the example, the program try to find the subarray sum 1 <= Sum[i, j] <= 3, which
+	is equivalent to 1 <= Pre[j] - Pre[i-1] <=3 and Pre[j] - 3 <= Pre[i-1] <= Pre[j] - 1. The j
+	index is the current iterator index. Based on the input Pre[j] and calculate the lower
+	and upper bound value (marked as red in the example above).
+	● With lower and upper bound value, we do the binary search in the prefix sum
+	array and return the starting and ending index satisfying the boundary values, so any
+	prefix sum array in the range can be counted
+	*/
+	class Solution {
+		static public int findStart(int[] prefixSum, int len, int target) {
+			int start = 0, end = len- 1;
+			while (start <= end) {
+				int mid = (end + start) / 2;
+				if (prefixSum[mid] == target)
+					end = mid - 1;
+				else if (prefixSum[mid] < target)
+					start = mid + 1;
+				else
+					end = mid - 1;
+			}
+			return start < len ? start : len - 1;
+		}
+		
+		static public int findEnd(int[] prefixSum, int len, int target) {
+			int start = 0, end = len - 1;
+			while (start <= end) {
+				int mid = (end + start) / 2;
+				if (prefixSum[mid] == target)
+					start = mid + 1;
+				else if (prefixSum[mid] < target)
+					start = mid + 1;
+				else
+					end = mid - 1;
+			}
+			return end >= 0 ? end : 0;
+		}
+		
+		public static int subarraySumII(int[] nums, int minVal, int maxVal) {
+			int n = nums.length;
+			int ans = 0;
+			//prefix sum array sum[i, j] = pre[j] - pre[i-1], so 0 is needed
+			in the front as the placeholder
+			int prefixSum[] = new int[n + 1];
+			prefixSum[0] = 0;
+			for (int i = 1; i <= n; i++)
+				prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
+			for (int index = 1; index < prefixSum.length; index++) {
+				//exception cases and no calculation needed
+				//1. incoming value is greater than the max
+				//2. accumulative sum is smaller than min
+				if (nums[index - 1] > maxVal || prefixSum[index] < minVal)
+					continue;
+				//binary search find the min value is greater than or equalto lowerBound
+				
+				int lowerBound = prefixSum[index] - maxVal;
+				//binary search find the max value is less than or equal to upperBound
+				
+				int upperBound = prefixSum[index] - minVal;
+				// Use Binary Search to find window's start and end
+				
+				int windowStart = findStart(prefixSum, index, lowerBound);
+				int windowEnd = findEnd(prefixSum, index, upperBound);
+				//add the number of cases satisfying the condition
+				ans += windowEnd - windowStart + 1;
+			}
+			return ans;
+		}
+	}
+}
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Continuous Subarray Sum
+There are three approaches to solve the continuous subarray sum questions:
+1. Split the array (分裂)
+2. Find the reverse logic (取反)
+3. Double the original array (加倍)
+*/
+class ContinuousSubarraySum{
+	/**
+	Description
+		Given a circular integer array (the next element of the last element is the first element), find a
+		continuous subarray in it, where the sum of numbers is the biggest. Return the index of the
+		first number and the index of the last number.
+	Example 1:
+		Input: [3, 1, -100, -3, 4]
+		Output: [4, 1]
+	*/
+	
+	/**
+	Reverse Logic
+		见131页
+		Since the array is circular, the maximum can occur in one of the two cases above.For case
+		1, use normal approach; for case 2, find the minimum in the middle, the left-over two
+		sections would produce a maximum.
+		Time Complexity: O(N)
+		Space Complexity: O(1)
+	*/
+	public class Solution {
+		public List<Integer> continuousSubarraySumII (int[] nums) {
+			int n = nums.length;
+			int totalSum = 0;
+			for (int i = 0; i < n; i++)
+				totalSum += nums[i];
+			// Find max with flag = 1, and find min with flag = -1
+			int[] ans1 = findMaxOrMin(nums, 1);
+			int[] ans2 = findMaxOrMin(nums, -1);
+			// Case 1: firstIndex <= endIndex
+			//情况为负 正 负 的话 正 > 总体(正 + 2负) - 负 也就是正 > 正 - 负 或者整体数组都为正
+			if (ans1[2] > ans2[2] + totalSum || ans2[1] - ans2[0] == n - 1)
+				return Arrays.asList(ans1[0], ans1[1]);
+			// Case 2: firstIndex > endIndex
+			else
+			//因为ans[0]指向反向最大的开始[1]指向反向最大的结束，所以需要结束需要加上1，开始要剪去1，%n是如果开始是最后一个 或者结束是第一个
+				return Arrays.asList((ans2[1] + 1) % n, (ans2[0] - 1 + n) % n);
+		}
+		
+		int[] findMaxOrMin (int[] nums, int flag){
+			int[] ans = new int[3];
+			int sum = 0, maxSum = Integer.MIN_VALUE;
+			int start = 0, end = 0;
+			for (end = 0; end < nums.length; end++){
+				sum += nums[end] * flag;
+				if (sum > maxSum){
+					maxSum = sum;
+					ans[0] = start;
+					ans[1] = end;
+					ans[2] = sum;
+				}
+				if (sum < 0){
+					sum = 0;
+					start = end + 1;
+				}
+			}
+			return ans;
+		}
+	}
+	/**
+	Idea 
+		Double the Original Array
+		Define a new array of size equals to n * 2. Then use a fixed size sliding window of size
+		equals to n, and find the maximum sum for each window
+	*/
+	class Solution {
+		public List<Integer> continuousSubarraySumII (int[] nums) {
+			int[] ans = new int[3];
+			int n = nums.length;
+			// Create a double sized new array, and copy from the original array
+			int[] new_nums = new int[n * 2];
+			for (int i = 0; i < n; i++) {
+				new_nums[i] = nums[i];
+				new_nums[i + n] = nums[i];
+			}
+			int sum = 0, maxSum = Integer.MIN_VALUE;
+			int start, end;
+			ans = continuousSubarraySum(nums, 0, n - 1);//[2, -1, 4, 3, 7]
+			// For each window of FIXED size = n, find the maximum sum
+			//[2, -1, 4, 3, 7] 变成 [2, -1, 4, 3, 7， 2, -1, 4, 3, 7]
+			//从-1, 4, 3, 7， 2, 这样 每个为5个长度 去找中间的最大值最后找到  4, 3, 7， 2,
+			for (start = 1, end = n; end < new_nums.length;) {
+				int[] tempAns = continuousSubarraySum(new_nums, start++, end++);
+				
+				// The temp answer has a bigger sum
+				if (tempAns[2] > ans[2])
+					ans = tempAns;
+			}
+			return Arrays.asList(ans[0] % n, ans[1] % n);
+		}
+	
+		public int[] continuousSubarraySum(int[] nums, int start, int end) {
+			int[] ans = new int[3];
+			int sum = 0, maxSum = Integer.MIN_VALUE;
+			for (int i = start; i <= end; i++) {
+				sum += nums[i];
+				if (sum > maxSum) {
+					maxSum = sum;
+					ans[0] = start;
+					ans[1] = i;
+					ans[2] = maxSum;
+				}
+				if (sum < 0) {
+					// Reset sum;
+					sum = 0;
+					// Skip the current value
+					start = i + 1;
+				}
+			}
+			return ans;
+		}
+	}
+}
+/**
+---------------------------------------------------------------------------------------------------------------------------
+For a sorted matrix, whose columns are sorted from left to right and rows are sorted
+from top to bottom, we can iterate through it to find a desired target or range in two ways:
+starting from bottom-left or top-right positions of the sorted matrix.
+*/
+class MatrixIteration{
+	/**
+	见134页
+	74. Search a 2D Matrix
+	*/
+	
+	/**
+	Bottom-Left Template
+	Idea:
+		Start from the bottom left position
+		● If element > target, move up by one row
+		● Else element < target, move right by one column
+		● Return true if element == target
+	*/
+	class Solution {
+		public boolean searchMatrix(int[][] matrix, int target) {
+			if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+				return false;
+			int m = matrix.length, n = matrix[0].length;
+			int row = m - 1, col = 0;
+			while (row >= 0 && col < n) {
+				if (matrix[row][col] > target)
+					row--;
+				else if (matrix[row][col] < target)
+					col++;
+				else
+					return true;
+			}
+			return false;
+		}
+	}
+	/**
+	Top-Right Template
+	Idea:
+		Start from the top right position
+		● If element > target, move left by one column
+		● Else If element < target, move down by one row
+		● Return true if element == target
+	*/
+	class Solution {
+		public boolean searchMatrix(int[][] matrix, int target) {
+			if (matrix == null || matrix.length == 0 || matrix[0].length == 0)
+				return false;
+			int m = matrix.length, n = matrix[0].length;
+			int row = 0, col = n - 1;
+			while (row < m && col >= 0) {
+				if (matrix[row][col] > target)
+					col--;
+				else if (matrix[row][col] < target)
+					row++;
+				else
+					return true;
+			}
+			return false;
+		}
+	}
+	
+	/**
+	378. Kth Smallest Number in Sorted Matrix
+	
+		Step1: Apply binary search, then count the number of elements that are <= mid value. While
+		counting, keep track of the smallest element that is > mid (called it R), and the largest
+		element that is <= mid (called it L).
+		
+		Step2: Traversing the matrix by:
+			● Always start from bottom left position then do:
+				○ If element > mid, update R and move up by one row
+				○ Else element <= mid, update L and move to next column, and make count
+				+= row + 1
+		Then adjust the range to [R, end] if count < k or [start, L] if count > k
+	*/
+		class Solution {
+			public int kthSmallest(int[][] matrix, int k) {
+				int n = matrix.length;
+				int start = matrix[0][0], end = matrix[n - 1][n - 1];
+				while (start <= end) {
+					int mid = start + (end - start) / 2;
+					// pair[0] biggest number <= mid, pair[1] smallest number > mid
+					int[] pair = {Integer.MIN_VALUE, Integer.MAX_VALUE};
+					// count the number of elements <= mid
+					int count = countElements(matrix, mid, pair);
+					//最后情况有可能是low == high == mid这时候就需要return之前的比mid小的最大值就好了
+					if (count == k || mid == end)
+						return pair[0];
+					else if (count < k)
+						start = pair[1];
+					else
+						end = pair[0];
+				}
+				return start;
+			}
+				
+			private int countElements(int[][] matrix, int mid, int[] pair) {
+				int count = 0;
+				int n = matrix.length;
+				int row = n - 1, col = 0;
+				while (row >= 0 && col < n) {
+					if (matrix[row][col] > mid) {
+						// Find the smallest number that > mid
+						pair[1] = Math.min(pair[1], matrix[row][col]);
+						row--;
+					}else {
+						// Find the biggest number that <= to mid
+						pair[0] = Math.max(pair[0], matrix[row][col]);
+						// Update count
+						// All the numbers in this column are <= mid
+						// So row + 1 = # of elements in this column.
+						count += row + 1;
+						col++;
+					}
+				}
+				return count;
+			}
+		}
+}
+
+/**
+---------------------------------------------------------------------------------------------------------------------------
+Heap is used for finding and maintaining the max and min element for an input, or finding a
+median value. For implementation [1] [2], Certain models are similar to BFS in: pop the
+current element from the heap and use it to find the next element for the upcoming iterations.
+*/
+class Heap{
+	/**
+	Single Heap Model
+		● Use a single max/min heap to find the kth largest/smallest element.
+		
+	1. Use a single min/max to maintain the k size of items, where the current item pops
+	from the heap and would be used to find the next elements from the input
+	*/
+	minHeap.add(startObject);
+	for(int i = 1; i < k; i++) {
+		//pop the current object in heap
+		Point cur = minHeap.poll();
+		//push the new objects found in the input matrix
+		for(int dir = 0; dir < dirs.length; dir++){
+			int dx = cur.x + dirs[dir][0];
+			int dy = cur.y + dirs[dir][1];
+			if(condition check){
+				minHeap.add(newObject);
+				ans += newObject.val
+			}
+		}
+	}
+	
+	/**
+	Recalculated Heap Model
+		● Heap’s current element is computed by the previous stages.
+		
+	2. The new heap elements are computed based on previous iteration results, instead
+	of being retrieved directly from the input
+	*/
+	for (int i = 0; i < primes.length; i++)
+		minHeap.offer(new Pair(primes[i], i));
+		
+	while (size < n) {
+		//pop the current object in heap
+		Pair cur = minHeap.poll();
+		//push the new Objects calculated by previous stage result
+		int nextNumber = primes[cur.primeIndex] * uglyNumbers.get(primeUsage[cur.primeIndex]);
+		minHeap.offer(new Pair(nextNumber, cur.primeIndex));
+	}
+	
+	/**
+	3. Operations: push new element into minHeap, then pop the min value item from
+	minHeap and push it to maxHeap. If maxHeap’s size is greater than minHeap’s, pop
+	the max value item from maxHeap and re-push it back to minHeap. Reason: Two
+	heaps need to maintain the relative order, where all the values minHeap should
+	be greater than the values in maxHeap.
+	*/
+	{
+	..
+		for (int i = 0; i < n; i++) {
+			//push the new objects
+			minHeap.add(i);
+			maxHeap.add(minHeap.pollFrist());
+			balance(maxHeap, minHeap);
+			if (maxHeap.size() + minHeap.size() == k) {
+				median = getMedian(k, nums, maxHeap, minHeap);
+				ans.add(median);
+				//pop the current object in heap
+				if (!maxHeap.remove(windowIndex))
+					minHeap.remove(windowIndex);
+				windowIndex++;
+			}
+		}
+		return ans;
+	}
+
+	private double getMedian(int k, int[] nums, TreeSet<Integer> maxHeap, TreeSet<Integer> minHeap) {
+		if (k % 2 == 0)
+			return ((double) nums[maxHeap.first()] + nums[minHeap.first()]) / 2;
+		else
+			return (double) nums[minHeap.first()];
+		}
+		
+	// Make sure minHeap size >= maxHeap size
+	private void balance(TreeSet<Integer> maxHeap, TreeSet<Integer> minHeap) {
+		if (maxHeap.size() > minHeap.size())
+			minHeap.add(maxHeap.pollFirst());
+	}
+	
+	/**heap:5	6	6	8	10
+	
+			2	1	1
+	
+	res 	1   2	3	4
+	
+	next = 	
+	
+	//min: 1
+	//max: 0
+	
+	
+	*/
+}
+
+/**
+--------------------------------------------------------------------------------------------------------------------------
+Sweep-Line usually applies to questions for finding overlaps of intervals, where each
+interval represents the starting position and ending position. Sorting the intervals is
+needed, and mostly using the single point model to solve questions. Heap can be applied to
+both window or single point models to maintain the k number of overlaps in the intervals.
+*/
+class SweepLine{
+	/**
+	Track Single Point Model
+		● Input is a list of single points, and each time compare with a single number [1]
+		2. Split the intervals (pre-processing) and iterate through the points to do furtheroperations
+	*/
+	...
+	// Sort the input list of intervals
+	Arrays.sort(intervals, (a, b) -> (a[0] - b[0]));
+	// Define a heap to track the min interval
+	Queue<int[]> minHeap = new PriorityQueue<>((a, b) -> (a[1] - b[1]));
+	for (int[] interval : intervals) {
+		// Each time compare an interval
+		if (condition) {
+			minHeap.poll();
+			minHeap.offer(interval);
+		}else
+			minHeap.offer(interval);
+	}
+	...
+	
+	/**
+	Track Window Model
+		● Use Data structure stores a list of intervals, and compare with a window [2]
+		1. Use a data structure (heap) to track the max or min of an interval (window)
+	*/
+	{
+		List<Point> timelines = new ArrayList<Point>();
+		// Pre-processing of input
+		for (Interval airplane : airplanes) {
+			timelines.add(new Point(airplane.start, 1));
+			timelines.add(new Point(airplane.end, 0));
+		}
+		// Sort the list based on some conditions...
+		Collections.sort(timelines, new Comparator<Point>() {
+			public int compare(Point p1, Point p2) {
+				if (p1.time == p2.time)
+					return p1.flag - p2.flag;
+				else
+					return p1.time - p2.time;
+			}
+		});
+		int ans = 0, count = 0;
+		// Compare with a single number each time
+		for (Point p : timelines) {
+			if (condition) count++;
+			else count--;
+			ans = Math.max(ans, count);
+		}
+		...
+	}
+	
+	/**
+	见153页
+	(LintCode) Number of Airplane in the Sky
+	按照起飞降落的顺序排序 如果一架起飞了+1 如果降落了则-1
+	*/
+}
+/**
+--------------------------------------------------------------------------------------------------------------------------
+Stack is used to store the temporary information for further computation in a LIFO order.
+The iterative stack method can be substituted by the recursive method. For monotone
+stack, it usually stores values under the same condition
+*/
+class StackAlgo{
+	/**
+	Idea (Monotone Stack: Push Later):
+	Use Monotone Stack to maintain the next smaller element for each node (a decreasing trend).
+	Initialize an iterator i to traverse the array, and create a node for each number then push the
+	node into stack after the following operations:
+		● when node.val is greater than or equal to stack.peek().val, make node’s left pointer
+		point to stack.pop(), keep doing it until node.val < stack.peek().val.
+		● Then if stack is not empty, make stack.peek().right point to node.
+	After iterator i traverse the whole array, the stack maintains a decreasing trend, keep
+	popping the stack and let the greatest node (stack’s bottom) be the root and return.
+	Time Complexity: O(N), Space Complexity: O(N)
+	*/
+}
+
+/**
+--------------------------------------------------------------------------------------------------------------------------
+Deque is a doubly ended queue where you can insert and remove elements from both the
+sides.
+*/
+class deque{
+	
+}
+
+/**
+--------------------------------------------------------------------------------------------------------------------------
+Union find has two key operations. Find: find the subset that an element belongs to. Union:
+connect two subsets into a single subset. The time complexity is O(1). The questions solved
+using Union find can also be resolved using BFS
+*/
+class UnionFind{
+	
+}
