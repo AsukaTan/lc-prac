@@ -1,0 +1,95 @@
+23/Feb/2023:
+Review portion:
+
+---------------
+287
+Binary Search
+/**
+鸽子笼问题
+如果整个list里面有比mid这个index相等或者更小的值
+eg. mid = 4 但是出现了5个值，则代表一定会有重复在4之前
+所以我们在1-4里面去寻找重复的值也就是high = mid - 1;
+注意inex value完全没有用我们只需要index就行了
+
+PS: 好久不写很不熟练
+*/
+class Solution {
+    public int findDuplicate(int[] nums) {
+        /**
+        time col: O(nlongn)
+        space col: o(1)
+            */
+        int low = 0, high = nums.length - 1;
+        int res = -1;
+        while(low <= high){
+            int count = 0;
+            int mid = (high - low)/2 + low;
+            for(int num : nums){
+                if(num <= mid){
+                    count++;
+                }
+            }
+            if(count > mid){
+                res = mid;
+                high = mid - 1;
+            }else{
+                low = mid + 1;
+            }
+        }
+
+        return res;
+    }
+}
+
+快慢指针
+/**
+fast = nums[nums[fast]]
+slow = nums[slow]
+
+其中会形成一个cyclic graph因为不同的index里面会有同样的值
+快慢指针一定会相遇，相遇之前是阶段1，后是阶段2
+phase1:
+d = distance
+fast ptr是slow ptr 2 times 所以在相同单位时间内dis也是2倍 => 2d(slow) = d(fast)
+我们把graph分为before cyclic entry point => dis(f)和after cyclic entry point => dis(c)
+a => point they meet  n => fast ptr绕了几圈
+2(f + a) = f + nC + a
+2f + 2a = f + nC + a
+f + a = nC (1)
+phase2:
+将slow ptr重新回到原点 将fast ptr变成slow的速度 然后重启追逐，slow and fast ptr一定在entry point相遇
+slow: f 正好走到entry point
+fast: because (1), a + f = nC must at entry point
+*/
+
+class Solution {
+    public int findDuplicate(int[] nums) {
+        /**
+        time col: O(n)
+        space col: o(1)
+         */
+	int slow = nums[0];
+        int fast = nums[0];
+	
+	//phase 1
+        while(true){
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+            if(slow == fast){
+                break;
+            }
+        }
+
+	//phase 2
+        slow = nums[0];
+
+        while(slow != fast){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        return fast;
+    }
+}
+
+
