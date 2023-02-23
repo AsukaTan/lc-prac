@@ -1,0 +1,391 @@
+2. Add Two Numbers DONE
+Use insertion method
+
+3. Longest Substring Without Repeating Characters DONE
+Pay attention to the method of window
+
+5. Longest Palindromic Substring DONE
+Have helper method to expand and examine Palindromic
+Remember there are two situations in this problem
+
+6. Zigzag Conversion DONE
+Watch the pattern of Zigzag 
+
+8. String to Integer (atoi) DONE
+注意第二部检查符号只能循环一次 需要在while循环末尾加上break
+其次是检测有没有到integer的最大值
+
+11. Container With Most Water DONE
+注意思想双指针 假设先为最小 每次往里面移动的时候都是去找最大值
+
+12. Integer to Roman DONE
+一定要注意创造其他class的时候熟练 class后面没有参数 data field不同填数字 constructor
+这题的循环其实是让target的数字除掉每个必要数字 1000 900 500 400 100…
+
+15. 3Sum DONE
+先sort数组 然后用two pointers的方法 一定注意如何去规避两个数值一样的方法
+
+16. 3Sum Closest DONE
+和上面一题使用的方法一样
+
+
+17. Letter Combinations of a Phone Number DONE
+这种back track的题目多用BFS解决 排列组合啥的 用queue
+
+18. 4Sum DONE
+和threeSum一样做 不过要小心第二个循环里面的重叠部分不能和第一个循环里面的重合
+
+19. Remove Nth Node From End of List DONE
+LinkedList的题目先加一个dummy_head(avoid edge case)然后用快慢指针想一想
+LinkedList: Slow and fast pointer
+
+22. Generate Parentheses DONE
+熟练使用recursion去做backtrack 
+https://www.youtube.com/watch?v=kCdelDh-k6Y讲述了backtrack的过程
+记得三要素1. Choice 2. Constrains 3. Goal 
+记得base case 然后去想recursion的decision做啥
+
+24. Swap Nodes in Pairs DONE
+不需要太多指针去iterate 可以iterate一个指针 然后其他Node根据指针来在每次循环里面赋值
+
+
+29. Divide Two Integers DONE
+For &, the result value is true if both operand values are true; otherwise, the result is false.
+For ^, the result value is true if the operand values are different; otherwise, the result is false.
+For |, the result value is false if both operand values are false; otherwise, the result is true.
+Bitwise Bit shift operators, they operate by shifting the number of bits being specified
+The signed left shift operator "<<" shifts a bit pattern to the left
+The signed right shift operator ">>" shifts a bit pattern to the right.
+The unsigned right shift operator ">>>" shifts a zero into the leftmost position
+小心Edge case 同时在while循环里面小心爆掉 多用减法如果跟MAX 和 MIN相关
+31. Next Permutation DONE
+具体见goodnote，一定注意初始的gap不能为0
+
+34. Find First and Last Position of Element in Sorted Array DONE
+注意灵活使用binary tree去搜索该数组中第一个出现和最后一个出现然后
+
+36. Valid Sudoku DONE
+注意hashset的使用方法 这题特别精妙 建议多看
+
+39. Combination Sum DONE
+如果对backtrack不熟悉 则去看这个视频
+https://www.youtube.com/watch?v=MTI2wc8s0BY&t=408s
+为了避免重复，我们需要传递上一个循环里面的值进入下面的循环保证pointer前面的值没有被重复使用
+
+40. Combination Sum II DONE
+最好写if(条件) 然后我们做啥 不要去更新指针
+
+43. Multiply Strings DONE
+小心最后的edge case然后乘法的规律在计算机里面如何实现
+
+46. Permutations DONE
+BackTrack 我tm人晕了 qnmb的 就记住模版吧 见goodnote
+
+47. Permutations II DONE
+还没有理解
+
+48. Rotate Image DONE
+记住旋转一个二维数组如何变换的 同时记住loop的次数每次变换 为当前右边剪掉左边
+
+49. Group Anagrams DONE
+记住hashmap<String, ArrayList>
+
+Median 1 完成
+
+50. Pow(x, n) DONE
+要考虑overflow的情况
+
+54. Spiral Matrix DONE
+对于螺旋形traverse的话 记住用完一行抛弃一行
+
+55. Jump Game DONE LEFT WITH ONE SOLUTION
+循环不是当前的index 而是循环index maximum走的路里面的每一种可能性
+
+
+56. Merge Intervals DONE
+一定要使用linkedlist一样的方法去更新指针去添加
+
+59. Spiral Matrix II DONE
+和1一样的思想
+
+61. Rotate List DONE
+链表长度一定要按照节点数量来
+
+62. Unique Paths DONE
+一定得想到dp然后想到他每一步都是上一步的机制
+
+63. Unique Paths II DONE
+和上一题的想法一样 但是记住先填1的时候如果碰到了障碍物的话需要break
+
+64. Minimum Path Sum DONE
+还是dp的思想记住把情况分清楚
+
+71. Simplify Path DONE
+y遇到比较string一定要用equals();
+
+73. Set Matrix Zeroes DONE
+一定要考虑firstrow and firstcolumn的情况
+
+74. Search a 2D Matrix DONE
+看见这种情况就是binary search不过要注意的就是 记住找2D数组的中间点就是除掉n
+
+75. Sort Colors DONE
+记住三个指针 但是==2时index不能动 因为换过来的肯能是1或者2 如果动了就跳过他了 ==0的时候指针必须动 因为如果不懂的话 指针就永远停留在0了
+
+
+77. Combinations DONE
+记住为了避免重复 我们需要把每次i + 1 而不是start + 1
+
+78. Subsets DONE
+以后还是使用for方法来写 统一自己的模版
+
+79. Word Search DONE
+记住需要把recursion写在if里面还有就是先让memo[rows][cols] = true;如果该循环不符合则把memo[rows][cols] = false写在最后
+
+80. Remove Duplicates from Sorted Array II DONE
+把i和p想像成两个不同的数组p不能和前面的2个重合，所以没有重合的时候，可以吧i位置上的东西全部加给p位置上的，当重合的时候只可以增加i去寻找第一个不重合的数字然后加上去
+
+33. Search in Rotated Sorted Array DONE
+ 先用binary search搜索最小值 如果右边比mid大的话代表往mid左边搜索 然后定位区间 最后在区间内用binary search
+
+81. Search in Rotated Sorted Array II DONE
+画出图 记住和33题不一样的点在于如果遇见重复我们需要移动指针因为我们无法确定一样的值的化 我们在与上半层还是下半程
+
+82. Remove Duplicates from Sorted List II DONE
+少设计指针 一般一个current就足够了 这道题目的思路如果next和next.next的val一样的化 我们则储存个next的val然后进入next.val和next != null的循环，第一个循环肯定是符合的因为next = next.next，然后连接current和next.next 
+因为这个第一个循环一直是对的，所以下面一个也是对的 变成连接current和current.next.next.next如果数值还是一样就继续连接 如果不一样则 弹出来
+
+86. Partition List DONE
+一个小于linkedlist一个大于等于的 蛮简单的
+
+
+90. Subsets II DONE
+记住你不要重复的话一定要sort才行
+
+91. Decode Ways DONE
+Dp[]  =	   1    1   2
+Such as      	1   2   2
+Dp[2] += dp[1]: 1|1|2 and 1 1|2 总的来说就是2作为单独一个数和前面一位有之前一位的组合方式但是只能在 != 0的情况下 因为0不是一个map
+Dp[2] += dp[0]: 1|12 就是你这一位和前一位组成的两位数 和前两位的排列方式
+还有就是要记得dp和string的index中间是差一位的所以dp[i]其实是s.charAt(i - 1)的字母的排列数量
+
+
+92. Reverse Linked List II DONE need review
+要背！！！ 还有记住不能=current因为current是一个在while循环里面变化的指针，使用pre.next!! Eg.
+1	2	3	4	5 →1		3	2	4	5→1	  4  3	 2   5
+Pre	cur	next		       Pre		cur	next
+同时做掉206题
+要再看这两题 没懂
+
+
+Median 2 DONE
+
+93. Restore IP Addresses DONE
+For的循环是每个index + (1 - 3) 
+index == s.length() 是因为我们substring(index, index + i）index + i 这个元素我们是没有包括到的 所以下一次我们call dfs(index + i)时候是从index + i 起的
+
+94. Binary Tree Inorder Traversal DONE
+记住preorder inorder postorder的区别
+记住preorder先添加在进入每个点之后
+95. Unique Binary Search Trees II DONE
+很经典的bottom up dfs 记得找出中间状态进行做题 假设自己已经有下一层的答案 用已有的答案来作题
+每一层都有自己的ArrayList用来贮存当前节点的bst，这个bst会在上一曾的节点用left / right运用到
+还有就是必须if (start > end)因为 == 的时候会进入一次 最后会返回这个==节点的值
+Such as 2
+	1	3-9
+Left = (1,1) 会返回1这个值 只有进入1以后因为 left = (1,0) right = (2,1) 这两个才会返回null 所以在接下来的两个for循环里只会加入这个节点的值也就是1 所以就是返回这个节点
+
+96. Unique Binary Search Trees DONE
+用bottom up dfs能做但是超时
+用dp来做这道题：记住算3个节点的总共的数 可以被用来算4个节点中节点：	   1
+ 个数:0:dp[0]	  3:这个右边有三种可能性: 2,3,4的个数跟之前三个节点的个数一模一样所以就为dp[3]
+https://www.youtube.com/watch?v=HWJEMKWzy-Q
+
+
+98. Validate Binary Search Tree DONE
+记住要用long因为这道题目的case包括Integer.MAX_VALUE和MIN思想就是带入左节点和右节点还有节点的限制（最大和最小值）如果节点的数值超过该限制则return false要不然return 这个节点的左右节点
+
+102. Binary Tree Level Order Traversal DONE
+DBS Queue的训练 需要记住Queue的大循环是while(!queue.isEmpty())里面在套for还有就是两个if不能写成if else if因为如果left和right都有 就可以进两次if的条件 如果是if else if只能进一个
+
+103. Binary Tree Zigzag Level Order Traversal DONE
+和上一道题相似  但是我们不需要去改变search的方向 我们只需要把temp的arrayList更改add的顺序就可以了
+
+105. Construct Binary Tree from Preorder and Inorder Traversal DONE
+1. HashMap<Integer, Integer> map = new HashMap();
+2. Int[] 的长度 length没有括号 因为不是function
+3. 引用数组里特定index的需要用[]
+
+一定注意root.right的节点的preStart需要使用preStart + root.left在prestart的长度 = root.left在inorder左手的长度(rootIndex - inStart)
+所以为preStart + rootIndex - inStart - 1;
+
+106. Construct Binary Tree from Inorder and Postorder Traversal DONE
+已知节点是postorder最后一个
+现在inorder里面搜索postEnd(是postEnd不是postEnd.length - 1因为我们需要进recursion)
+得到rootIndex在inorder里面后会得到
+left的长度等于rootIndex - 1 - inStart
+我们带入到left的postEnd里面就为postStart + rootIndex - 1 - inStart同时右边+1则为right的start，最后right的end为postEnd - 1;
+
+113. Path Sum II DONE
+注意base case为targetSum == root.val && root.left == null && root.right == null 因为 没次我们减去当前的值，如果上个节点进入这个节点 先执行的是if statement而不是减去 所以是等于
+还有就是dfs(left) and dfs(right)中间不需要写remove and add因为如果进入一个leaves程序会把两个dfs() call过一遍 会返回两个null 然后会remove掉通过最后一行 所以不用担心
+
+114. Flatten Binary Tree to Linked List DONE
+注意第二个是if(!stack.isEmpty())
+还有就是注意这道题的思想 先push右边 再push左边 然后每次都peek一下 添加到 当前current的右节点上 然后在下面一个循环 pop出来 来循环
+
+第二种方法我们先把root的右节点储存了 然后让右边等于左边 循环到 原左节点 现右节点的右边最后一个 然后接上之前储存的右节点
+
+116. Populating Next Right Pointers in Each Node DONE
+BFS记住queue的poll是在for循环里面的 还有给他加next直接用peek看下一个Node就行了！！！ 如果是最后一个就已经自动null掉了
+
+120. Triangle DONE
+经典dp 不过用原来的ArrayList就行了 从下到上
+List<Integer> current = triangle.get(i); 如果需要获得一个single arraylist的指针指向double ArrayList这样子写
+同时记得用size()还有写题的时候别忘记自己用的类型！！！
+
+127 hard bu zuo
+
+131. Palindrome Partitioning DONE
+注意他的循环顺序在index = 0 and i = 1的循环里会进index = 1 i = 2的循环一直向下， 但是如果我们执行完index = 0 and i = 1的一次loop然后进入index = 0 and i = 2代表着我们增加一个新element去检查是不是Palindrome
+
+133. Clone Graph DONE
+记得先去建立map为原节点 和 新节点，用recursion把所有加入进来 这里注意我们在循环外面先创建新的node然后在循环里面call recursion就可以了 然后创造第二个方法去吧所有的neighbors连接起来 记得我们在循环里是得到本node的新节点 然后 
+把他的neighbors加入进去 记得这里加入的也得是新的 然后进入循环
+
+
+
+
+134. Gas Station DONE
+我们从0开始循环到结束 current表示目前的油量，如果油量不够代表无论从前面哪个点出发油量都不够 所以我们更新index = i + 1代表从新的节点出发current = 0重置，最后的total看总共的油量有没有路程多 如果少的话 代表无论如何我们都无法返回节点 
+所以返回-1 要不然返回index
+
+139. Word Break DONE
+注意dp的bond因为通常dp[0]为初始值，所以我们要让i循环等于s.length()最后我们才能substring(0, s.length() + 1)的范围
+其次注意dp的思想 我们选取一个中间状态 进行思考第一个循环循环整个数组第二个循环循环第一个循环循环的东西进行操作
+
+142. Linked List Cycle II DONE
+精妙的数学问题 根据代数我们能知道 f = 2s 最后算得到 m = x + n(k - 1). 所以我们先循环到相遇点 然后继续让fast回到头 最后相遇的地方就是交界点
+
+143. Reorder List DONE
+先循环到一半 然后断开 把后半段断开 把后半段reversed 然后把后半段穿插到前半段里面 记住如果前半段最后为null 则需要把next变为second指针的后面一位
+
+147. Insertion Sort List DONE
+先测试current 和 current.next的值的大小 如果检测到后面比前面小的化 把next变为temp然后整另外一个指针从头循环到current 如果记住比较的是pre.next.val和temp.val 如果pre.next.val > temp.val的话则插入
+
+148. Sort List DONE  lack merge sort
+可以同样使用insertion sort进行解决 注意每次得让pre = dummy才行如果= head则无法比较head的值
+
+
+MEDIAN 4
+150. Evaluate Reverse Polish Notation DONE
+很简单 但是要明白String Integer的转换 使用valueOf就行了
+还有就是看懂题 搞清楚/和-的关系
+
+153. Find Minimum in Rotated Sorted Array DONE
+运用了之前在rotated array里面寻找最小值的方法 简单
+
+162. Find Peak Element DONE
+Logn二分法 用Bottom up就行
+还有种方法 如果[mid] > [mid + 1]则代表在左边一定有点符合所以end = mid 反之 start = mid 在while(left + 1 < right)的循环里 最后检查left 和 right 如果left大返回left 反之right
+
+173. Binary Search Tree Iterator DONE
+用stack去做 但是得记得每次得更新指针到pop的东西上面去 如果不这样的话 当我们到一个leaf的时候 指针会指向null的
+
+200. Number of Islands DONE
+循环每个点 如果为1的话res++ 然后用dfs把相邻点都变为0 关键就是要想到把相邻点变为0
+
+207. Course Schedule DONE
+记住把每个list的index的作用写出来跟明确
+主要就是先扫描pre 把课和他的前置课程数量添加进去
+然后把没有前置的课放入queue 然后poll出来循环如果变成0就放入queue里面
+hashmap反而更慢 
+
+208. Implement Trie (Prefix Tree) DONE
+创建一个其他Node class Node class里面有数组，和boolean 初始化数组26长度 然后在本class里面有个root 让root = new Node()然后加入数组就是每次向下
+记住每个方法前面都是需要Node指针指向roo向下 不可以把root直接向下
+明早起来再做一次
+
+209. Minimum Size Subarray Sum DONE
+Sliding windows的题目 想移动右边窗口 如果大于了则进入其中while的循环 缩小左边的边界 注意是left <= right因为length长度可以为1
+
+210. Course Schedule II DONE
+用207的方法的 记住 if(numPre[course[0]] == 0){
+                				queue.offer(course[0]);
+            			}
+别写成offer(numsPre[course[0]])了
+
+230. Kth Smallest Element in a BST  DONE
+不能使用while(!stack.isEmpty())因为返回到根的时候会出现stack.isEmpty()的情况
+
+236. Lowest Common Ancestor of a Binary Tree DONE
+如果左右都不为空则都返回 要不然就返回哪边不为空的点
+
+240. Search a 2D Matrix II DONE
+每次找pivot为右上角的点 然后有两个指针row / col去缩小空间
+
+253. Meeting Rooms II DONE
+先sort根据arrays[0]
+用PriorityQueue记得queue的排序方式用lambda expression怎么写
+然后我们每次poll出最早结束的那场meeting 如果没重合就把meeting结束时间合并 如果重合 就把这个meeting放进去 然后再把poll出来的东西放进去
+回看
+
+274. H-Index DONE
+傻逼题目 唯一难点就是看懂他那个不用人话写的题目
+
+279. Perfect Squares DONE
+记住想法想法 一个数等于剪掉一个完全平方 再去 查找这个数的组成需要几个
+还有就是填充n就行了 因为不会高于n 其次n要从1开始因为等于0会造成他等于自己的填充
+
+280. Wiggle Sort DONE
+如果为奇数位同时比前面小则和前面互换 如果为偶数位比前面大 则和前面互换
+
+284. Peeking Iterator DONE
+需要初始化cur和iter next直接返回当前点 然后向后移动cur peek直接返回当前点
+对于重构类的题目还不熟练 需要多看
+Iterator类需要看
+
+286. Walls and Gates DONE
+BFS：我们先把所有门加入进queue 然后我们第一步把所有门poll出来 然后添加进入他的前后左右格子 并赋值为1 然后我们再把前后左右加进去开启新一轮的循环
+DFS：和数岛屿那道题一样 我们每遇到门 就dfs，return条件为这个数 小于 step 因为这个代表着 之前loop过了 得到个更近的path to 门 所以终止就行了
+
+287. Find the Duplicate Number DONE
+和142题一样 快慢指针赛跑 但是要记住 如果不能使用while(slow != fast)而死while(true)因为他们一开始进去都是0
+
+288. Unique Word Abbreviation DONE
+得注意题目 如果dict里面两个简写一样的话 则无论进入什么都是false
+
+294. Flip Game II DONE
+我们去看第一个人能不能翻出一个没有连续的++的情况 如果可以就赢了
+Dfs：我们每遇到循环里面 有两个+就变成--，然后继续进入自己 如果这个recursion返回true的话 代表我们就输了 因为他可以继续翻 base case永远是false 比如++++ 变成--++ 然后变成---- —-一定返回false 所以--++返回true 所以++++返回false 
+这种情况不能赢
+
+307 练习segment tree的题目
+
+310. Minimum Height Trees DONE
+了解graph的bfs 当最后一个消除就是要留下的点 因为我们要以最多edge的点为顶点才可以最矮 我们最后消除的indegree的点就是边最多的
+
+313. Super Ugly Number DONE
+用pirorityQueue的题目 每次我们poll出来的数组 第0位是存放这个数的下一个值 这个下一个值就是在res数组里面使用index位置的值
+
+320. Generalized Abbreviation DONE
+Dfs 用StringBuilder()记住nums只能在大于0的时候加入进去
+
+323. Number of Connected Components in an Undirected Graph DONE
+用dfs 然后使用hashset查重
+剩下bfs和uinion find的方法
+
+361. Bomb Enemy DONE
+用了两种dfs方法
+缺少dp
+
+377. Combination Sum IV DONE
+使用backtrack注意for里面i = 0因为 就算i循环过一次 下一个call里面每次都要从0开始 同时记住recursive call里面counter带入0因为不能让上个循环的答案次数重复带入
+同时使用hashmap去记录remain几次下的次数 如果下次碰见同样的remain数组就可以返回hashmap的remain的次数从而加速
+
+394. Decode String DONE
+记住我们的before_stack是储存前面string的stack 当我们检测到‘]’我们的tail是我们需要重复的东西
+记住返回string的话需要tostring push进入stack也需要toString
+
+
+
