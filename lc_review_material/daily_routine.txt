@@ -93,3 +93,57 @@ class Solution {
 }
 
 
+25/Feb/2023:
+98
+BST traversal
+/**
+注意这道题的number of tree range[1,10^4],所以如果root = 2^31 - 1的root.val的话带入的话无法使用Integer比较
+必须使用Long比较
+还有就是注意我们通过一个中间状态的node来进行DFS的编写
+*/
+class Solution {
+    /**
+    time col: O(N)
+    space col: O(N) space for stack*/
+    public boolean isValidBST(TreeNode root) {
+        return DFS(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    public boolean DFS(TreeNode root, long min, long max){
+          //base case
+        if(root == null){
+            return true;
+        }
+        if(root.val <= min || root.val >= max){
+                return false;
+        }
+        return DFS(root.left, min, root.val) && DFS(root.right, root.val, max);
+    }
+}
+
+114
+/**
+intuition: we should performance pre-order BST traversal but it is wrong
+we should perform post order go into right branch first and left branch, and insert in reverse way
+6	5	4 ...
+选择中间状态5
+让上一个接到5的right，让left变为null
+同时让这个值变为prev，进入下一次循环
+*/
+
+class Solution {
+    /**
+    time col: O(N)
+    space col: O(N)
+     */
+    public TreeNode prev = null; 
+    public void flatten(TreeNode root) {
+        if(root == null) return;
+
+        flatten(root.right);
+        flatten(root.left);
+        root.right = prev;
+        root.left = null;
+        prev = root;
+    }
+}
