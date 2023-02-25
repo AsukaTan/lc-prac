@@ -209,7 +209,7 @@ class BinaryTreeTraversals{
 BFS mainly uses Queue
 1. BFS can be applied to three main categories: Tree, Graph, and Matrix.
 2. In general, BFS can apply to graph traversal problems that are related to finding thelevel order traversal, connected components, and topological sorting.
-3. In addition, BFS also works for finding the shortest path in a simple graph. (not know)
+3. In addition, BFS also works for finding the shortest path in a simple graph.
 Question_Num	Difficulty		Reminders
 17				Medium			要清楚自己每个循环里在干啥
 210

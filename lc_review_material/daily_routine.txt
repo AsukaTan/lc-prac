@@ -123,6 +123,7 @@ class Solution {
 
 114
 /**
+BST Traversal
 intuition: we should performance pre-order BST traversal but it is wrong
 we should perform post order go into right branch first and left branch, and insert in reverse way
 6	5	4 ...
@@ -145,5 +146,115 @@ class Solution {
         root.right = prev;
         root.left = null;
         prev = root;
+    }
+}
+
+17
+/**
+BFS
+Remember the pattern of classical queue
+记得先给queue先喂一个值
+注意循环string的时候需要把string先变为chararray用toCharArray() 
+*/
+class Solution {
+    public List<String> letterCombinations(String digits) {
+        /**
+        time col: O(N^2)
+        space col: O(3^n - 4^n)
+        */
+        List<String> res = new ArrayList();
+        if(digits.equals("")) return res;
+        String[] look_up = {"0", "1", "abc", "def", "ghi", "jkl",
+        "mno", "pqrs", "tuv", "wxyz"};
+        Queue<String> queue = new LinkedList();
+        queue.offer(""); 
+       for(int i = 0; i < digits.length(); i++){
+            int dig = digits.charAt(i) - '0';
+	    /**
+		queue: a, b, c
+		i = 1, dig = 3的情况下
+		我们有我们需要依此将a, b, c拉出来
+		然后和d, e, f进行排列组合
+		首先组合成ad, ae, af
+		这时候a出去了 b在queue的顶层
+		我们peek()一下去得到信息
+		当前的第一个level里面的内容没有全部poll()完 => (queue.peek().length() == i)
+	    */							
+            while(queue.peek().length() == i){
+                String temp = queue.poll();
+                for(char c : look_up[dig].toCharArray()){
+                    queue.offer(temp + c);
+                }
+            }
+        }
+
+        while(!queue.isEmpty()){
+            res.add(queue.poll());
+        }
+
+        return res;
+    }
+}
+
+
+210
+/**
+BFS
+如何将具体的例子化为抽象的做题模版很重要
+同时在写的时候使用具体的例子帮助自己减少错误
+*/
+class Solution {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] indegree = new int[numCourses];
+        int[] res = new int[numCourses];
+        int j = 0;
+        Queue<Integer> queue = new LinkedList();
+
+        //build the indegree matrix
+        for(int[] pre : prerequisites){
+            indegree[pre[0]]++;
+        }
+
+        //add courses w/o pre add the queue
+        for(int i = 0; i < numCourses; i++){
+            if(indegree[i] == 0) queue.offer(i);
+        }
+
+        //
+        while(!queue.isEmpty()){
+            int cur = queue.poll();
+            res[j++] = cur;
+            for(int[] pre : prerequisites){
+
+                    /**
+                    if current course does not have preq(num of pre == 0) then we   
+                    pass this choice since it already on the queue
+                     */ 
+                    if(indegree[pre[0]] == 0){
+                        continue;
+                    }
+
+                    //subtract one pre course
+                    if(pre[1] == cur)indegree[pre[0]]--;
+
+                    /**
+                    if pre == 0 after we subtract one pre course, then we add this 
+                    course to the queue
+                    */
+                    if(indegree[pre[0]] == 0){
+                        queue.offer(pre[0]);
+                    }
+                
+            }
+        }
+
+        //we check if there is some course still have pre course
+        for(int i = 0; i < numCourses; i++){
+            if(indegree[i] != 0){
+                return new int[0];
+            }
+        }
+
+        return res;
     }
 }
