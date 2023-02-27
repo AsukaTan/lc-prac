@@ -258,3 +258,58 @@ class Solution {
         return res;
     }
 }
+
+
+26/Feb/2023:
+1367
+/**
+DFS
+这道题为两个dfs嵌套，需要记住嵌套dfs的pattern
+*/
+class Solution {
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        /**
+            NOTE：figure out base case then 选取中间状态进行DFS编写(IMPORTANT)
+            N = tree size, H = tree height, L = list length
+            time col: O(N * min(L,H))
+            space col: O(H)
+         */
+        //always handle corner case first
+        if(root == null && head == null) return true;
+        if(root == null && head != null) return false;
+        if(root != null && head == null) return true;
+        
+        return dfs(head, root);
+    }
+
+    /**
+        先使用dfs查询每个TreeNode的值 == ListNode的值，
+        如果吻合就进行path check不吻合就查看children的情况
+     */
+    public boolean dfs(ListNode head, TreeNode root){
+        if(root == null) return false;
+        if(checkPath(head, root)){
+            return true;
+        }else{
+            return dfs(head, root.left) || dfs(head, root.right);
+        }
+    }
+
+    /**
+        在每个TreeNode与ListNode进行比较
+        注意base case如果curHead到尽头了 说明has path
+     */
+    public boolean checkPath(ListNode curHead, TreeNode curRoot){
+        if(curHead == null) return true;
+        if(curRoot == null) return false;
+
+        if(curHead.val == curRoot.val){
+            return checkPath(curHead.next, curRoot.left) ||
+                checkPath(curHead.next, curRoot.right);
+        }else{
+            return false;
+        }
+    }
+}
+
+
