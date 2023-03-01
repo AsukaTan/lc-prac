@@ -356,3 +356,69 @@ class Solution {
         return max + informTime[index];
     }
 }
+
+
+28/Feb/2023:
+/**
+Tire内容不多 不是那么重要先跳过
+HashMap没啥东西
+
+LinkedList周末看
+周末计划一天dp一天linkedList
+今天先看ptr iteration
+*/
+/**
+216
+Typical find K-th largest in the array
+*/
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        //no base case in this question so we move on
+        int low = 0, high = nums.length - 1;
+        while(low <= high){
+            //partition returns the relative pos in array
+            int partition = findPartition(nums, low, high);
+            if(partition == (nums.length - k)){
+                //if the relative oreder match
+                return nums[partition]; 
+            }else if(partition > (nums.length - k)){
+                //if the partition on right side of target => go left
+                high = partition - 1;
+            }else{
+                low = partition + 1;
+            }
+        }
+        return nums[high];
+    }
+
+    public int findPartition(int[] nums, int low, int high){
+        /**
+            we assume start is the pivot point every time
+            random points are both fine in this method
+         */
+         int pivot = low;
+         while(low < high){
+             
+             /**
+                first let low points to the first elts which > pivot
+                note when low == high, we also need to move one more space
+             */
+            while(low <= high && nums[pivot] >= nums[low]) low++;
+            //same for high ptr
+            while(low <= high && nums[pivot] < nums[high]) high--;
+
+            if(low < high){
+                int temp = nums[low];
+                nums[low] = nums[high];
+                nums[high] = temp;
+            }
+         }
+
+         int temp = nums[pivot];
+         nums[pivot] = nums[high];
+         nums[high] = temp;
+
+         return high;
+    }
+}
+

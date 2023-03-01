@@ -212,7 +212,7 @@ BFS mainly uses Queue
 3. In addition, BFS also works for finding the shortest path in a simple graph.
 Question_Num	Difficulty		Reminders
 17				Medium			要清楚自己每个循环里在干啥
-210
+210				Medium			
 339				Medium			需要额外注意对于method的使用 因为他是arraylist嵌套 所以要使用addAll()方法
 994				Medium			最后需要剪掉1
 253
@@ -248,9 +248,10 @@ class Breadth First Search{
 	2. Pre-build hashmap.
 	a. Transform an array of array into Adjacency List for BFS traversal
 	*/
+	//new an array with type List<Integer>
 	List<Integer>[] graph = new List[n];
 	for (int i = 0; i < graph.length; i++)
-		graph[i] = new ArrayList<>();
+		graph[i] = new ArrayList<>();//initlized with arrayLists
 	for (int[] edge : edges) {
 		graph[edge[0]].add(edge[1]);
 		graph[edge[1]].add(edge[0]);
