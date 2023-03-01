@@ -1,0 +1,120 @@
+class:
+    public
+
+    private: 如果不declare默认为private
+    
+    在method里可以使用this代替ptr
+
+    让datafield为private
+
+    在 c++ new: Stack *s = new Stack(17);
+
+    constructor:前面不需要加return type, 正常method需要
+                 Stack(param_inside);
+                 Stack::Stack(param_inside){}
+                 一定要自己重写constructor
+
+    多数不使用Destructor: 最后释放内存
+                ~Stack();
+                Stack::~Stack(){
+                    delete [] stack;
+                }
+
+    new 完的data储存在heap里面 所以不会deallocated 我们得使用delete
+
+    stack = new int[size];
+
+    inline function:
+                    class Stack{
+                        bool Full(){};
+                    }
+                    beacuse its convenience and performance
+
+    comments: // or /* */
+
+    const keyword:  allow to flag an error if being used improperly(better than using #define)
+
+    cout << "Hello world!" << 3 << "!";
+    equals to 
+    fprintf(stdout, "Hello world! This is section %d!\n",
+    in c
+
+
+    int field1, field2 
+    cin >> field1 >> field2
+    //equivalent to fscanf(stadin, "%d %d", &field1, &field2);
+
+
+    Inheritance:
+    4.1.1 shared behavoir
+        base/super class: contains just functions but no data
+        derived/sub class: inherit behavoir from base class
+
+        keyword virtual: virtual void Push(int value) = 0; 
+        signfy they can be redefined by each of two derived classes
+
+        class ArrayStack : public Stack{
+            public:
+                void Push(int vlaue);
+        }
+
+        destructor for Stack is a virtual function but constructor is not
+
+        if you dont define a destructor for the abstract class, compiler would define implicitly
+        and this automatic destructor is not implicitly, and cause memory leak
+
+    4.1.2 shared Implementation
+        keyword: protected
+
+        use Inheritance when representing shared behavoir, and never shared Implementation
+
+    4.2 Template范型
+
+        1. find a bug using Template is difficult
+        2. 数据大小爆炸
+
+    5. Feature to avoid like the Plague:
+        别用
+        1. Pointer arithemetic:
+            dont use pointer to arithemetic to iterate the whole Array
+            use separate index variable and aseert that index is never
+            lager than the size of Array
+        
+        2. cast from int to pointer and back
+
+        3. use bit shift in place of a multiply or divide
+
+        4.Assignment inside conditional
+
+        5.Use enum rather than #define
+
+    6. Styling Guidelines:
+
+        1.除了getSomething() or setSomething() 其他class name and member function begins with大写字母
+
+        2.gloval functions 全大写
+
+        3.少用global variable
+
+        4.少用global function
+
+        5.every class: .h file and .cc file
+            .h => interface to the class
+            .cc => Implementation(should include its respective .h file)
+
+            如果两个.h文件互相需要ad-hoc
+
+            如果only use a ptr to class stack and do not access any member 
+            function or data from that class:
+            use 
+            class Stack;
+            instead of
+            stack.h:
+        
+        6.Use ASSERT statement to check program behave properly
+            abort if the condition is false
+            useful when beginning and ends of procedures
+        
+        7.module test for every module in your program(unit test)
+    
+            
