@@ -422,3 +422,110 @@ class Solution {
     }
 }
 
+2023/Mar/11
+/**
+今天继续ptr iteration
+*/
+280
+class Solution {
+    public void wiggleSort(int[] nums) {
+        //always handle corner case first
+        if(nums.length == 0) return;
+
+        for(int i = 0; i < nums.length - 1; i++){
+            if(i % 2 == 0){
+                //if its even
+                if(nums[i + 1] < nums[i]){
+                    swap(nums, i, i + 1);
+                }
+            }else{
+                if(nums[i + 1] > nums[i]){
+                    swap(nums, i, i + 1);
+                }
+            }
+        }
+    }
+
+    public void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+        return;
+    }
+}
+
+
+324
+class Solution {
+    public void wiggleSort(int[] nums) {
+        /**
+        该题不能使用从左到右的count去填充数组
+        因为res数组也是从左到右的填充方法 我们会在中间遇到重复
+        如果是从右往左到count
+        得相反方向填写 
+        */
+        Arrays.sort(nums);
+        int[] res = new int[nums.length];
+        int count = nums.length - 1;
+        for(int i = 1; i < nums.length; i+=2){
+            res[i] = nums[count--];
+        }
+        for(int i = 0; i < nums.length; i+=2){
+            res[i] = nums[count--];
+        }
+
+        for(int i = 0; i < nums.length; i++){
+            nums[i] = res[i];
+        }
+    }
+}
+
+15
+//3 ptr usage
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        //-4,-1,-1,0,1,2
+        
+        //store results in res
+        List<List<Integer>> res = new ArrayList();
+
+        //sort
+        Arrays.sort(nums);
+
+        for(int i = 0; i < nums.length - 2; i++){
+            /**
+                Remember to check duplicate 
+                when you are in i, check for i - 1 == i, if == just pass
+             */
+            if(i != 0 && nums[i] == nums[i - 1]) continue;
+            int low = i + 1, high = nums.length - 1;
+            //now do 2 sum
+            while(low < high){
+                int sum = nums[i] + nums[low] + nums[high];
+                //sum > 0 shift high ptr to left
+                while(sum > 0 && low < high){
+                    sum = nums[i] + nums[low] + nums[--high];
+                }
+                //sum < 0 shift low ptr to right
+                while(sum < 0 && low < high){
+                    sum = nums[i] + nums[++low] + nums[high];
+                }
+                if(low < high && sum == 0){
+                    List<Integer> temp = new ArrayList(Arrays.asList(nums[i], nums  [low], nums[high]));
+                    res.add(temp);
+                    /**
+                    remember to check for duplicate after we find a perfect solution
+                    that is [low + 1] == [low] or high...
+                    update low and high after we skip duplicate
+                     */
+                    while(low < high && nums[low] == nums[low + 1])low++;
+                    while(low < high && nums[high] == nums[high - 1])high--;
+                    low++;
+                    high--;
+                }
+            }
+        }
+
+        return res;
+    }
+}
