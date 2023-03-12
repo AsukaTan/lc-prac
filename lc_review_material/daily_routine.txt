@@ -529,3 +529,61 @@ class Solution {
         return res;
     }
 }
+
+
+/**
+Sliding windows prac
+*/
+
+/**
+最简单的sliding wind 有个快的ptr在满足情况下一直往右走 在满足条件的情况下
+如果条件不满足了 则停止快ptr 然后让慢ptr往右走一直到条件满足继续循环快的ptr
+*/
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        /**
+        我们有low / high 两个ptr
+        如果high扫到重复的就让low扫到重复的val上一次出现即可
+        */
+
+        //corner case
+        if(s.length() == 0) return 0;
+
+        HashSet<Character> hs = new HashSet();
+
+        int low = 0, high = 0, max = 0;
+
+        while(high < s.length()){
+            if(!hs.contains(s.charAt(high))){
+                hs.add(s.charAt(high));
+                max = Math.max(max, hs.size());
+                high++;
+            }else{
+                hs.remove(s.charAt(low));
+                low++;
+            }
+        }
+
+        return max;
+    }
+}
+
+
+12/Mar/2023
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        //corner case
+        if(nums.length == 1) return nums[0] < target ? 0 : 1;
+
+        int sum = 0, left = 0, res = Integer.MAX_VALUE;
+        for(int right = 0; right < nums.length; right++){
+            sum += nums[right];
+            while(sum >= target){
+                res = Math.min(res, right - left + 1);
+                sum -= nums[left++];
+            }
+        }
+
+        return res == Integer.MAX_VALUE ? 0 : res;
+    }
+}
