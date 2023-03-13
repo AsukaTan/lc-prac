@@ -587,3 +587,80 @@ class Solution {
         return res == Integer.MAX_VALUE ? 0 : res;
     }
 }
+
+13/Mar/2023:
+subarray sum
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers includes the index of the first number and the index of the last number
+     */
+    public List<Integer> subarraySum(int[] nums) {
+        List<Integer> res = new ArrayList();
+        //corner case
+        if(nums.length == 0) return res;
+
+        if(nums.length == 1 || nums[0] == 0){
+            res.add(0);
+            res.add(0);
+            return res;
+        } 
+
+        int[] dp = new int[nums.length + 1];
+        Map<Integer, Integer> hm = new HashMap();
+        
+        //get prefix sum into dp
+        dp[0] = 0;
+        for(int i = 1; i < nums.length; i++){
+            dp[i] = dp[i - 1] + nums[i - 1];
+        }
+
+        //turn 
+        for(int i = 0; i < dp.length; i++){
+            if(hm.containsKey(dp[i])){
+                int left = hm.get(dp[i]);
+                int right = i - 1;
+                res.add(left);
+                res.add(right);
+                break;
+            }
+            hm.put(dp[i], i);
+        }
+
+        return res;
+    }
+}
+
+Continuous Subarray Sum
+public class Solution {
+    /**
+     * @param a: An integer array
+     * @return: A list of integers includes the index of the first number and the index of the last number
+     */
+    public List<Integer> continuousSubarraySum(int[] a) {
+        /**
+            如果前面是负数的话 我们就抛弃前面 让left变成当前right的下一位
+            同时让sum = 0
+            如果我们找到了比maxsum大的sum的话 我们就更新maxsum 储存left right
+        */
+        // corner case
+        if(a.length == 0) return new ArrayList();
+        int[] temp = new int[2];
+
+        int left = 0, right = 0, max = Integer.MIN_VALUE, sum = 0;
+        for(right = 0; right < a.length; right++){
+            sum += a[right];
+            if(sum > max){
+                max = sum;
+                temp[0] = left;
+                temp[1] = right;
+            }
+            if(sum < 0){
+                sum = 0;
+                left = right + 1;
+            }
+        }
+
+        return Arrays.asList(temp[0], temp[1]);
+    }
+}
