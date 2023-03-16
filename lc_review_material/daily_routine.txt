@@ -664,3 +664,141 @@ public class Solution {
         return Arrays.asList(temp[0], temp[1]);
     }
 }
+
+
+16/Mar/2023
+Lintcode 405
+public class Solution {
+    /**
+     * @param matrix: an integer matrix
+     * @return: the coordinate of the left-up and right-down number
+     */
+    public int[][] submatrixSum(int[][] matrix) {
+        // write your code here
+        int[][] res = new int[2][2];
+        //base case first
+        if(matrix.length == 0 || matrix[0].length == 0)
+            return res;
+
+        int m = matrix.length, n = matrix[0].length;
+        //sumup matrix
+        int[][] dp = new int[m + 1][n + 1];
+        for(int i = 1; i < m + 1; i++){
+            for(int j = 1; j < n + 1; j++){
+                dp[i][j] = matrix[i - 1][j - 1] + dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1];
+            }
+        }
+
+        //loop through rows to find vert diff
+        for(int startRow = 0; startRow < m; startRow++){
+            for(int endRow = startRow + 1; endRow < m + 1; endRow++){
+
+                //build hashmap
+                Map<Integer, Integer> hm = new HashMap();
+                
+                //loop cols to find same vertDiff
+                for(int col = 0; col < n + 1; col++){
+                    int vertDiff = dp[endRow][col] - dp[startRow][col];
+                    if(hm.containsKey(vertDiff)){
+                        res[0][0] = startRow;
+                        res[0][1] = hm.get(vertDiff);
+                        res[1][0] = endRow - 1;
+                        res[1][1] = col - 1;
+                        return res;
+                    }else{
+                        hm.put(vertDiff, col);
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+
+
+560
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int[] dp = new int[nums.length + 1];
+        dp[0] = 0;
+        int count = 0;
+        //get the value into prefix arr
+        for(int i = 1; i < dp.length; i++){
+            dp[i] = dp[i - 1] + nums[i - 1];
+        }
+
+        //hashmap with key: prefixSum value:count to k
+        Map<Integer, Integer> hm = new HashMap();
+        for(int i = 0; i < dp.length; i++){
+            if(hm.containsKey(dp[i] - k))
+                count += hm.get(dp[i] - k);
+            hm.put(dp[i], hm.getOrDefault(dp[i], 0) + 1);
+        }
+
+        return count;
+    }
+}
+
+209
+TLE, use sliding windows instead
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        //load prefix sum
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        for(int i = 1; i < dp.length; i++){
+            dp[i] = dp[i - 1] + nums[i];
+        }
+
+        int min = Integer.MAX_VALUE;
+        for(int i = 0; i < dp.length; i++){
+            for(int j = i; j < dp.length; j++){
+                int val = dp[j] - dp[i] + nums[i];
+                if(val >= target){
+                    min = Math.min(min, j - i + 1);
+                    break;
+                }
+            }
+        }
+
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
+}
+
+Lintcode 404
+public class Solution {
+    /**
+     * @param a: An integer array
+     * @param start: An integer
+     * @param end: An integer
+     * @return: the number of possible answer
+     */
+    public int subarraySumII(int[] a, int start, int end) {	
+ 	//index相当于一个分隔符确保每个elt我们找到符合条件的substring
+        //left ptr确保不超过最大值
+	//right ptr确保一定大于最小值
+	//最后将right - left得到所有组合
+        //如果当前windows sum大于end则移left ptr
+        //如果下一个value的sum大于start,则移动right ptr
+        int[] dp = new int[a.length + 1];
+        dp[0] = 0;
+        for(int i = 1; i < dp.length; i++){
+            dp[i] = dp[i - 1] + a[i - 1];
+        }
+
+        int left = 0, right = 0, count = 0;
+        for(int i = 0; i < dp.length; i++){
+            while(left < i && dp[i] - dp[left] > end){
+                left++;
+            }
+            while(right < i && dp[i] - dp[right] >= start){
+                right++;
+            }
+
+            count += (right - left);
+        }
+
+        return count;
+    }
+}
