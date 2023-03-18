@@ -802,3 +802,161 @@ public class Solution {
         return count;
     }
 }
+
+322
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        //corner case
+        if(amount == 0) return 0;
+
+        //we use top down dp recursive memo deal with it
+
+        //first we use amount as size of dp
+        int[] memo = new int[amount + 1];
+        memo[0] = 0;
+
+        int res = TopDown(coins, amount, memo, amount);
+        //使用memo.length代替Integer.MAX_VALUE因为+1会overflow memo的长度不会变成amount + 1因为memo最小为1组成
+        return res == memo.length ? -1 : res;
+
+    }
+
+    public int TopDown(int[] coins, int amount, int[] memo, int cur){
+        //first ensure for memo
+        if(memo[cur] != 0){
+            return memo[cur];
+        }
+
+        //ensure base case
+        if(cur == 0){
+            return 0;
+        }
+
+        //use dp to express our state
+        int min = memo.length;
+        for(int coin : coins){
+            if(cur - coin >= 0)
+                min = Math.min(min, TopDown(coins, amount, memo, cur - coin) + 1);//the min from last loop or the current loop
+        }
+
+        //assign min to cur 
+        memo[cur] = min;
+        return min;
+    }
+}
+
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        //first corner case
+        if(amount == 0) return 0;
+
+        //fill up dp array
+        int[] dp = new int[amount + 1];
+        
+        for(int i = 1; i < dp.length; i++){
+            dp[i] = dp.length;
+            for(int coin : coins){
+                if(i - coin >= 0)
+                    dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+            }
+        }
+
+        return dp[amount] == dp.length ? -1 : dp[amount];
+    }
+}
+
+
+361
+class Solution {
+    public int maxKilledEnemies(char[][] grid) {
+        //这道题的思想很重要 我们把 分成横向和竖向
+        //横向只有在刚开始或者遇到墙的时候才会重新算， 要不然都是一样的
+        //竖向同理
+        //比如【0，0】算完 【0，1】就不需要算横向的 因为和之前一样
+    }
+}
+
+
+63
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        //do it in-place
+
+        int m = obstacleGrid.length, n = obstacleGrid[0].length;
+        //corner case if first cell is obstacle
+        if(obstacleGrid[0][0] == 1) return 0;
+
+        obstacleGrid[0][0] = 1;
+
+        for(int i = 1; i < m; i++){
+            //如果当前是空地 然后前面一个也是空地的话 我们则让他们等于1
+            //我们不可以break掉 因为in-place的话后面可能出现obstacle，然后remains 1，就出现bug了
+            if(obstacleGrid[i][0] == 0 && obstacleGrid[i - 1][0] == 1){
+                obstacleGrid[i][0] = 1;
+            }else{
+                obstacleGrid[i][0] = 0;
+            }
+        }
+
+        for(int i = 1; i < n; i++){
+            if( obstacleGrid[0][i] == 0 && obstacleGrid[0][i - 1] == 1){
+                obstacleGrid[0][i] = 1;
+            }else{
+                obstacleGrid[0][i] = 0;
+            }
+        }
+
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
+                if(obstacleGrid[i][j] == 0)
+                    obstacleGrid[i][j] = obstacleGrid[i - 1][j] + obstacleGrid[i][j - 1];
+                else
+                    obstacleGrid[i][j] = 0;
+            }
+        }
+
+        return obstacleGrid[m - 1][n - 1];
+    }
+}
+
+198
+class Solution {
+    public int rob(int[] nums) {
+       //we use top down dfs with memo
+       //1. size 2. 初始化的值
+       //切记我们有两种选择rob这家, 然后就是rob nums - 2 或者 不rob这家, 然后rob nums - 1这家
+       //使用例子对<0的case进行判断
+       int[] memo = new int[nums.length];
+        Arrays.fill(memo, - 1);
+        memo[0] = nums[0];
+        return TopDown(nums, memo, nums.length - 1);
+    }
+
+    public int TopDown(int[] nums, int[] memo, int i){
+        //base case first
+        if(i < 0) return 0;
+
+        if(memo[i] != -1) return memo[i];
+
+        int max = Math.max(TopDown(nums, memo, i - 2) + nums[i], TopDown(nums, memo, i - 1));
+
+        memo[i] = max;
+        return max;
+    }
+}
+
+//use classical dp
+//尽量使用+, instead of - 因为- corner case考虑
+class Solution {
+    public int rob(int[] nums) {
+       //we use dp
+
+       int[] dp = new int[nums.length + 1];
+        dp[0] = 0;
+        dp[1] = nums[0];
+        for(int i = 1; i < dp.length - 1; i++){
+            dp[i + 1] = Math.max(dp[i - 1] + nums[i], dp[i]);    
+        }
+       return dp[dp.length - 1];
+    }
+}
