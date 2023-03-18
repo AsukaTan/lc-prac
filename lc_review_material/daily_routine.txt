@@ -960,3 +960,83 @@ class Solution {
        return dp[dp.length - 1];
     }
 }
+
+class Solution {
+    public int rob(int[] nums) {
+      int prev_rob = 0, cur_rob = 0;
+      for(int i = 0; i < nums.length; i++){
+          int temp = cur_rob;
+          //prev的状态为上上个循环里cur的状态，所以代表选择当前和上两个的状态
+          //cur的状态是上一个循环里cur的状态，所以代表不选择当前
+          cur_rob = Math.max(prev_rob + nums[i], cur_rob);
+          prev_rob = temp;
+      }
+
+      return cur_rob;
+    }
+}
+
+152
+class Solution {
+    public int maxProduct(int[] nums) {
+        //careful corner case for res, if only 1 elts in nums, then we just return this one
+        //we must set res = nums[0] because if first elts is the largest, we cannot check that because we start from i = 1
+        //so set up the init state as nums[0]
+        int max_rn = nums[0], min_rn = nums[0], res = nums[0];
+        for(int i = 1; i < nums.length; i++){
+           //we need to keep track both max_value and min_value for negative value
+            int cur = nums[i];
+            //we must set an temp_max value to store the max 
+            //becuase we do not want to change the cur_max value in computing min_rn
+            //max_rn should from the previous loop to indicate the states of last time
+            int temp_max = Math.max(cur, Math.max(cur*max_rn, cur*min_rn));
+            min_rn = Math.min(cur, Math.min(cur*max_rn, cur*min_rn));
+            
+            max_rn = temp_max;
+            
+            res = Math.max(max_rn, res);
+        }
+
+        return res;
+    }
+}
+
+lintcode 394抽象之王
+public class Solution {
+    /**
+     * @param n: An integer
+     * @return: A boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int n) {
+        // write your code here
+
+        if(n == 0) return false;
+        if(n < 3) return true;// 1 2 cases we do not need to consider
+        //let say n = 3
+        //如果A 无论做什么 1, 2个 B都可以win(move_1), win(move_2)
+        //let say n = 4
+        //如果A 拿一个，n = 3 lose(mov_1) and lose(mov_2)
+        //如果A 拿两个, n = 2 lose(mov_1) and win(mov_2) 或者 win(mov_1) and lose(mov_2)
+
+        //对于n = 3 来说 mov_1 = true mov_2 = true cur_mov = false
+        //因为我们从n = 3开始考虑
+        boolean mov_1 = true;
+        boolean mov_2 = true;
+        boolean cur_mov = false;
+        //第一和第二个case 不用管， 所以总共我们要管n - 2次循环所以从2 到 n - 1, 一共n - 2次循环
+        for(int i = 2; i < n; i++){
+            //对于cur_mov来说，如果对方两个mov都可以赢，则对面都能赢
+            //mov_2是上上一次的mov_1,也就是上上上次的cur_mov
+            //mov_1是上次的cur_mov
+            //这次是A的mov 所以上次是B的mov 同理上上次也是B的mov
+            cur_mov = !(mov_2 && mov_1);
+            boolean temp = mov_1;
+            //对于下一次的mov来说，是这一次的cur_mov是A的mov
+            mov_1 = cur_mov;
+            //对于另外一个mov来说，是上一次上上次的cur_mov是A的mov
+            mov_2 = temp;
+        }
+
+        return cur_mov;
+    }
+}
