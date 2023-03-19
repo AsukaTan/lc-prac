@@ -1040,3 +1040,26 @@ public class Solution {
         return cur_mov;
     }
 }
+
+
+public class Solution {
+    /**
+     * @param nums: an integer array and all positive numbers
+     * @param target: An integer
+     * @return: An integer
+     */
+    public int backPackV(int[] nums, int target) {
+        // write your code here
+        int[] dp = new int[target + 1];
+        //必须为1 比如有个size为1 我们加入1的时候dp[1] = dp[1] + dp[1 - 1] 必须为0
+        dp[0] = 1;
+        for(int num : nums){
+            for(int i = target; i >= 0; i--){
+                if(i - num >= 0)
+                    dp[i] = dp[i - num] + dp[i];
+            }
+        }
+
+        return dp[target];
+    }
+}
