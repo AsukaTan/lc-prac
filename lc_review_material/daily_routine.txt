@@ -1063,3 +1063,49 @@ public class Solution {
         return dp[target];
     }
 }
+
+
+20/Mar/2023
+注意transition function
+class Solution {
+    public int numDecodings(String s) {
+        int[] arr = new int[s.length()];
+        for(int i = 0; i < s.length(); i++){
+            arr[i] = s.charAt(i) - '0';
+        }
+        int[] memo = new int[s.length()];
+        //Top Down DFS + memo
+        return DFS(arr, memo, 0);
+    }
+
+    public int DFS(int[] arr, int[] memo, int i){
+        //base case first
+        if(i == arr.length) return 1;
+
+        if(memo[i] != 0) return memo[i];
+
+        int res = 0;
+        if(arr[i] != 0)
+            res += DFS(arr, memo, i + 1);
+        if(i + 1 < arr.length && arr[i]*10 + arr[i + 1] >= 10 && arr[i]*10 + arr[i + 1] <= 26)
+            res += DFS(arr, memo, i + 2);
+
+        memo[i] = res;
+        return res;
+    }
+}
+
+//iterative method
+class Solution {
+    public int numDecodings(String s) {
+        int[] dp = new int[s.length() + 1];
+        dp[dp.length - 1] = 1;
+        for(int i = dp.length - 2; i >= 0; i--){
+            if(s.charAt(i) != '0')
+                dp[i] += dp[i + 1];
+            if(i + 1< dp.length - 1 && Integer.parseInt(s.substring(i, i + 2)) >= 10 && Integer.parseInt(s.substring(i, i + 2)) <= 26)
+            dp[i] += dp[i + 2];
+        }
+
+        return dp[0];
+    }
