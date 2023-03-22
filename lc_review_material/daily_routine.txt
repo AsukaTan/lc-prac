@@ -1109,3 +1109,92 @@ class Solution {
 
         return dp[0];
     }
+
+124
+//bipointer method
+class Solution {
+    public int maxProfit(int[] prices) {
+        //profit[i]记录的是当前的最大差价也就是我们的利润
+        //left_min一直记录我们的最小的买入价格
+        //我们不用担心买入会在卖出后面因为我们是先使用状态
+        //也就是说我们compare profit[i - 1]和profit[i] - 最小价格
+        //然后更新最小价格
+        //每次profit会记录最大利润，然后我们比较每一个当前卖出 - 最小差价的值 和 最大profit
+	//记住left_arr比right_arr小一格
+        //[0, 1, 3, ...., x]
+        //[y, ...., 3, 2, 1, 0]
+        //如果0+y最大代表只进行一次交易能实现最大值 
+       int left_min = prices[0], right_max = prices[prices.length - 1];
+        int[] left_arr = new int[prices.length];
+        int[] right_arr = new int[prices.length + 1];
+
+        for(int i = 1; i < left_arr.length; i++){
+            left_arr[i] = Math.max(left_arr[i - 1], prices[i] - left_min);
+            left_min = Math.min(left_min, prices[i]);
+        }
+
+        for(int i = left_arr.length - 2; i >= 0; i--){
+            right_max = Math.max(right_max, prices[i]);
+            right_arr[i] = Math.max(right_arr[i + 1], right_max - prices[i]);
+        }
+
+        int max = 0;
+        for(int i = 0; i < left_arr.length; i++){
+            max = Math.max(max, left_arr[i] + right_arr[i + 1]);
+        }
+
+        return max;
+    }
+}
+
+
+22/Mar/2023
+474 backpack dp
+class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+        //m -- 0    n -- 1
+        //关于backpack类型的dp
+        //我们要清晰认知对于dp的两种状态
+        //对于dp[i][j]表达的就是0有i个 1有j个中最多有几个subset
+        //所以对于我们每次更新一个str来说，我们loop的范围是i : (m -> zero_counter) j : (n -> one_counter)
+        //因为如果小于zero_counter的index 比如[0][1] 代表 0个0 1个1 中最多的subset
+        //如果我们这个current subset有1个1 1个0 则代表改subset无法进入dp[0][1]的条件
+        //因此我们无法对改状态进行+1 我们只能对所有符合状态的数组进行增加
+        int[][] dp = new int[m + 1][n + 1];
+        for(String str : strs){
+            int zero_counter = 0, one_counter = 0;
+            for(char c : str.toCharArray()){
+                if(c == '0') zero_counter++;
+                if(c == '1') one_counter++;
+            }
+            for(int i = m; i >= zero_counter; i--){
+                for(int j = n; j >= one_counter; j--){
+                    if(i - zero_counter >= 0 && j - one_counter >= 0)
+                        dp[i][j] = Math.max(dp[i][j], dp[i - zero_counter][j - one_counter] + 1);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+}
+
+
+LintCode 92
+Backpack dp
+public class Solution {
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param a: Given n items with size A[i]
+     * @return: The maximum size
+     */
+    public int backPack(int m, int[] a) {
+        // write your code here
+        int[] dp = new int[m + 1];
+        for(int current_weight : a){
+            for(int i = m; i >= current_weight; i--)
+                dp[i] = Math.max(dp[i], dp[i - current_weight] + current_weight);
+        }
+
+        return dp[m];
+    }
+}
