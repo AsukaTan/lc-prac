@@ -1068,7 +1068,7 @@ public class Solution {
 20/Mar/2023
 注意transition function
 class Solution {
-    public int numDecodings(String s) {
+	    public int numDecodings(String s) {
         int[] arr = new int[s.length()];
         for(int i = 0; i < s.length(); i++){
             arr[i] = s.charAt(i) - '0';
@@ -1196,5 +1196,80 @@ public class Solution {
         }
 
         return dp[m];
+    }
+}
+
+Lintcode 125
+Backpack dp
+public class Solution {
+    /**
+     * @param m: An integer m denotes the size of a backpack
+     * @param a: Given n items with size A[i]
+     * @param v: Given n items with value V[i]
+     * @return: The maximum value
+     */
+    public int backPackII(int m, int[] a, int[] v) {
+        // write your code here
+        int[] dp = new int[m + 1];
+        for(int i = 0; i < a.length; i++){
+            int cur_size = a[i], cur_value = v[i];
+            for(int j = m; j >= cur_size; j--){
+                dp[j] = Math.max(dp[j], dp[j - cur_size] + cur_value);
+            }
+        }
+
+        return dp[m];
+    }
+}
+
+Lintcode 440
+public class Solution {
+    /**
+     * @param a: an integer array
+     * @param v: an integer array
+     * @param m: An integer
+     * @return: an array
+     */
+    public int backPackIII(int[] a, int[] v, int m) {
+        // write your code here
+        int[] dp = new int[m + 1];
+        for(int i = 0; i < a.length; i++){
+            int cur_size = a[i], cur_value = v[i];
+            for(int j = cur_size; j <= m; j++){
+                dp[j] = Math.max(dp[j], dp[j - cur_size] + cur_value);
+            }
+        }
+
+        return dp[m];
+    }
+}
+
+
+Lintcode 89
+Backpack accumulate problem
+public class Solution {
+    /**
+     * @param a: An integer array
+     * @param k: A positive integer (k <= length(A))
+     * @param target: An integer
+     * @return: An integer
+     */
+    public int kSum(int[] a, int k, int target) {
+        // write your code here
+        //注意backpack中有两种题型
+        //第一种是问你有多少种ways去储存东西 : dp[i] += dp[i - current];
+        //第二种是问你最大的情况 : dp[i] = Math.max();
+        //记住如果是不要重复 两个循环都是要从后向前 因为从最后一个开始时前面的都没更新
+        //所以没有overlap
+        int[][] dp = new int[k + 1][target + 1];
+        dp[0][0] = 1;
+        for(int current_val : a){
+            for(int i = k; i > 0; i--){
+                for(int j = target; j >= current_val; j--){
+                    dp[i][j] +=  dp[i - 1][j - current_val];
+                }
+            }
+        }
+        return dp[k][target];
     }
 }
