@@ -1273,3 +1273,25 @@ public class Solution {
         return dp[k][target];
     }
 }
+
+Leetcode 516
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        //方向很重要i stands for the beginning character j: ends
+        //对于 i，j 我们要从后往前循环 从左往右循环 因为我们看的是左下角的值 或者是 左边和下面的值
+        //我们需要先讲左下角初始化好了 才可以往上循环
+        //切记循环顺序通过dp的trans function来决定
+        int[][] dp = new int[s.length()][s.length()];
+        for(int i = s.length() - 1; i >= 0; i--){
+            dp[i][i] = 1;
+            for(int j = i + 1; j < s.length(); j++){
+                if(s.charAt(i) == s.charAt(j))
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                else
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);
+            }
+        }
+
+        return dp[0][s.length() - 1];
+    }
+}
